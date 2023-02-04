@@ -1,55 +1,16 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from "next";
-import internal from "stream";
+import {
+    DayMenu,
+    AllFood,
+    FoodItem,
+    LOCATIONS,
+    TIMES,
+    Menu,
+    Product,
+    ResponseMenu,
+    FoodItemInstance,
+} from "./types";
 
-enum Location {
-    CORE = "core",
-}
-const LOCATIONS = {
-    9713: Location.CORE,
-};
-enum Times {
-    BREAKFAST = "breakfast",
-    LUNCH = "lunch",
-    DINNER = "dinner",
-}
-const TIMES = {
-    "891": Times.BREAKFAST,
-    "892": Times.LUNCH,
-    "893": Times.DINNER,
-};
-
-interface ResponseMenu {
-    Menu: Menu;
-}
-
-interface Menu {
-    MenuProducts: Product[];
-}
-
-interface Product {
-    PeriodId: string;
-    Product: {
-        MarketingName: string;
-        ShortDescription: string;
-        Categories: {
-            DisplayName: string;
-        }[];
-    };
-}
-
-interface DayMenu {
-    items: FoodItem[];
-}
-
-interface FoodItem {
-    name: string;
-    desc: string;
-    time: Times;
-    location: Location;
-}
-
-async function get_location_menu(
+export async function get_location_menu(
     id_location: string,
     date: Date,
 ): Promise<[Menu | null, Error | null]> {
@@ -65,10 +26,10 @@ async function get_location_menu(
     return [json.Menu, null];
 }
 
-async function get_day_menu(
+export async function get_day_menu(
     date: Date,
 ): Promise<[DayMenu | null, Error | null]> {
-    const items: FoodItem[] = [];
+    const items: FoodItemInstance[] = [];
     for (const id_location of Object.keys(LOCATIONS)) {
         const [menu, err] = await get_location_menu(id_location, date);
         if (err != null) {
@@ -100,7 +61,7 @@ async function get_day_menu(
             // @ts-ignore
             const location = LOCATIONS[id_location];
 
-            const item: FoodItem = {
+            const item: FoodItemInstance = {
                 name,
                 desc,
                 time,
@@ -112,17 +73,34 @@ async function get_day_menu(
     return [{ items }, null];
 }
 
-export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse<DayMenu>,
-) {
-    const { date } = req.query;
-    const date_obj = new Date(date as string);
-    let [menu, err] = await get_day_menu(date_obj);
-    if (err != null || menu == null) {
-        res.status(400);
-        return;
-    }
+function remove_food_instance(item: FoodItemInstance): FoodItem {
+    return {
+        name: item.name,
+        desc: item.desc,
+    };
+}
 
-    res.status(200).json(menu);
+export async function get_all_food(): Promise<[AllFood | null, Error | null]> {
+    let date = new Date();
+    const items: FoodItem[] = [];
+
+    for (let i = 0; i < 6; i++) {
+        date = new Date(date.getTime() + i * (1000 * 60 * 60 * 24));
+
+        const [instances, err] = await get_day_menu(date);
+        if (err != null) {
+            return [null, err];
+        }
+        if (instances == null) {
+            return [null, new Error("instances is null for some reason")];
+        }
+        const has_dup = (name: string): boolean => {
+            return items.findIndex((item) => item.name == name) != -1;
+        };
+        for (const instance of instances.items) {
+            if (has_dup(instance.name)) continue;
+            items.push(remove_food_instance(instance));
+        }
+    }
+    return [{ items }, null];
 }
