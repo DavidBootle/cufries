@@ -1,0 +1,40 @@
+.card {
+    width: 300px;
+    overflow: hidden;
+    border-radius: 10px;
+    background-color: var(--custom-bg-gray);
+    box-shadow: 5px 5px 8px lightgray;
+}
+
+.cardThumbnail {
+    width: 100%;
+}
+
+.cardThumbnail img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.cardDetails {
+    padding: 10px;
+    margin-bottom: 5px;
+    background-color: var(--custom-bg-gray);
+}
+
+.cardTitle {
+    font-weight: bold;
+    margin-bottom: 8px;
+    font-size: 20px;
+}
+
+.badge {
+    background-color: var(--clemson-orange);
+    display: inline-block;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 99px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    font-size: 12px;
+}
