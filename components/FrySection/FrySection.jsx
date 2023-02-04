@@ -15,14 +15,27 @@ const fries = [
     name: "Shoestring French Fries",
     description: "This is a french fry.",
   },
+  {
+    name: "Sweet Potato French Fries",
+    description: "This is a french fry.",
+  },
 ];
 
 const FrySection = () => {
+  const fryRows = [];
+  for (let i = 0; i < fries.length; i += 3) {
+    fryRows.push(fries.slice(i, i + 3));
+  }
+
   return (
-    <div class={styles.FrySection}>
-      {fries.map((fry, i) => {
-        return <FryCard key={i} name={fry.name} />;
-      })}
+    <div className={styles.FrySection}>
+      {fryRows.map((fryRow, i) => (
+        <div key={i} className={styles.FryRow}>
+          {fryRow.map((fry, j) => (
+            <FryCard key={j} name={fry.name} />
+          ))}
+        </div>
+      ))}
     </div>
   );
 };
