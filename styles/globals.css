@@ -1,3 +1,14 @@
+:root {
+  --custom-bg-gray: #F2F2F2;
+  --custom-text-gray: #AEAEAE;
+  --clemson-orange: #F37500;
+  --clemson-purple: #522D80;
+}
+
+* {
+  font-family: sans-serif;
+}
+
 .flex-row {
   display: flex;
   flex-direction: row;
