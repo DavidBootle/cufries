@@ -1,1 +1,19 @@
-/** EMPTY **/
+.logo {
+    /* width: 150px;
+    height: 150px; */
+}
+
+.headerTitle {
+    margin-top: 20px;
+    font-size: 40px;
+}
+
+.headerSubtitle {
+    color: var(--custom-text-gray);
+    margin-top: 10px;
+}
+
+.header {
+    background-color: var(--custom-bg-gray);
+    padding: 30px;
+}
