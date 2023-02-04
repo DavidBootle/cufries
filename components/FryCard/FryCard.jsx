@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styles from "./frycard.module.css";
+import styles from "./FryCard.module.css";
 
 const FryCard = (name) => {
   const [selected, setSelected] = useState(false);

@@ -1,3 +1,17 @@
+:root {
+  --custom-bg-gray: #F2F2F2;
+  --custom-text-gray: #727272;
+  --clemson-orange: #F37500;
+  --clemson-purple: #522D80;
+}
+
+* {
+  font-family: "Libre Franklin", sans-serif;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
 .flex-row {
   display: flex;
   flex-direction: row;
