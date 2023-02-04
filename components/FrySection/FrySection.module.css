@@ -1,0 +1,7 @@
+.FrySection {
+    display: flex;
+    flex-direction: row;
+    padding: 30px;
+    gap: 30px;
+    justify-content: center;
+}

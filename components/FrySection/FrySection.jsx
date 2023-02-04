@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import FryCard from "@/components/FryCard/FryCard";
+import styles from './FrySection.module.css';
 
 const fries = [
   {
@@ -14,18 +15,11 @@ const fries = [
     name: "Shoestring French Fries",
     description: "This is a french fry.",
   },
-  {
-    name: "Sweet Potato French Fries",
-    description: "This is a french fry.",
-  },
 ];
 
 const FrySection = () => {
   return (
-    <div>
-      <div>
-        <h3>🍟 My Fries</h3>
-      </div>
+    <div class={styles.FrySection}>
       {fries.map((fry, i) => {
         return <FryCard key={i} name={fry.name} />;
       })}

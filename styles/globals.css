@@ -23,3 +23,7 @@
   flex-direction: column;
   align-items: center;
 }
+
+.side-padded {
+  padding: 0 20vw 0 20vw;
+}
