@@ -14,6 +14,14 @@ export default class Landing extends React.Component {
     
     componentDidMount() {
     // fetch data from menu-day
+
+        // check if preferences are set
+        // if not redirect to settings
+        let favorites = localStorage.getItem("favorites");
+        console.log(favorites);
+        if (!favorites || favorites == '[]') {
+            window.location.href = "/settings";
+        }
         axios.get("/api/menu-day", { timeout: 30000 })
         .then((response) => {
             if (response.data && response.data.items) {

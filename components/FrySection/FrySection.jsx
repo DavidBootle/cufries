@@ -15,6 +15,7 @@ export default class FrySection extends React.Component {
     this.submitSave = this.submitSave.bind(this);
 
     // load preferences from localStorage
+
     let localFavorites = localStorage.getItem('favorites') || "[]";
     let favorites = JSON.parse(localFavorites);
 
