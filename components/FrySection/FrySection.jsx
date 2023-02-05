@@ -29,37 +29,42 @@ const FrySection = () => {
   const [fries, setFries] = useState([]);
 
   async function getMenu() {
-    const response = await axios.get("/api/menu-day");
+    const response = await axios
+      .get("/api/menu-day", { timeout: 30000 })
+      .catch((err) => toast.error(`Failed to fetch with ${err}`));
 
-    console.log(response);
-    console.log(response.body.items);
+    // console.log(response);
+    // console.log(response.body);
 
-    const data = JSON.stringify(response.body.items);
-
-    setFries(data);
-
-    return data;
+    return response;
   }
 
   useEffect(() => {
-    getMenu().then((res) => {
-      console.log(res);
-    });
+    const query = async () => {
+      await getMenu().then(async (res) => {
+        const data = await JSON.stringify(res.data.items);
+
+        fries.push(data[2]);
+
+        console.log(fries);
+
+        return data;
+      });
+    };
+    query();
   }, []);
 
   const fryRows = [];
 
-  if (fries.length > 0) {
+  if (fries && fries.length > 0) {
     for (let i = 0; i < fries.length; i += 3) {
       fryRows.push(fries.slice(i, i + 3));
     }
-  } else {
-    toast.error("Failed to fetch.");
   }
 
   return (
     <div className={styles.FrySection}>
-      {fries.length > 0 ? (
+      {!fries || fries.length > 0 ? (
         <center>
           <p>No menu items found.</p>
         </center>
