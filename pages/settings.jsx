@@ -47,7 +47,7 @@ export default class Landing extends React.Component {
                 <div className={styles.promptText}>Select Foods to Track:</div>
                 {this.state.loading ?
                 <></> :
-                <FrySection fries={this.state.fries} selectable={true}/>
+                <FrySection fries={this.state.fries} selectable={true} showSearchBar={true}/>
                 }
             </div>
         )

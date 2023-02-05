@@ -2,38 +2,37 @@ import React, { useState } from "react";
 import styles from "./FryCard.module.css";
 import Image from "next/image";
 
-const FryCard = (props) => {
+export default class FryCard extends React.Component {
+  
+  // PROPS
+  // fry - fry item
+  // selected - true or false
+  // onSelection(fryId, state)
 
-  // PROPS:
-  // selectable (true, false)
-
-  let scaleOnHoverClass = !props.selectable ? styles.scaleOnHover : styles.selectable;
-
-  const [selected, setSelected] = useState(false);
-
-  function toggleSelected() {
-    if (props.selectable) {
-      setSelected(selected ? false : true);
-    }
+  constructor(props) {
+    super(props);
   }
 
-  let selectedClass = selected ? styles.selected : '';
+  render() {
 
-  return (
-    <div onClick={toggleSelected} className={`${styles.card} ${selectedClass} ${scaleOnHoverClass}`}>
-      <div className={styles.selectCircle}></div>
-      <div className={styles.cardThumbnail}>
-        <img src="https://i.imgur.com/dxOjhM3.jpg" alt="fries" />
-      </div>
-      <div className={styles.cardDetails}>
-        <h4 className={styles.cardTitle}>{props.name}</h4>
-        <div className={styles.badgeRow}>
-          <div className={styles.badge}>CORE - Lunch</div>
-          <div className={styles.badge}>CORE - Dinner</div>
+    let scaleOnHoverClass = !this.props.selectable ? styles.scaleOnHover : styles.selectable;
+
+    let selectedClass = this.props.selected ? styles.selected : '';
+
+    return (
+      <div onClick={() => this.props.onSelection(this.props.fry.id, this.props.selected ? false : true)} className={`${styles.card} ${selectedClass} ${scaleOnHoverClass}`}>
+        <div className={styles.selectCircle}></div>
+        <div className={styles.cardThumbnail}>
+          <img src="https://i.imgur.com/dxOjhM3.jpg" alt="fries" />
+        </div>
+        <div className={styles.cardDetails}>
+          <h4 className={styles.cardTitle}>{this.props.fry.name}</h4>
+          <div className={styles.badgeRow}>
+            <div className={styles.badge}>CORE - Lunch</div>
+            <div className={styles.badge}>CORE - Dinner</div>
+          </div>
         </div>
       </div>
-    </div>
-  );
-};
-
-export default FryCard;
+    );
+  }
+}

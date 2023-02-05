@@ -13,8 +13,28 @@
     margin-bottom: 30px;
 }
 
+.searchBarContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.searchBar {
+    margin-top: 20px;
+    font-size: 30px;
+    text-align: center;
+    border: 1px solid var(--custom-text-gray);
+    border-radius: 5px;
+    outline: none;
+    width: 50vw;
+}
+
 @media (max-aspect-ratio: 1/1) {
     .FryRow {
         flex-direction: column;
+    }
+
+    .searchBar {
+        width: 90%;
+        font-size: 30px;
     }
 }
