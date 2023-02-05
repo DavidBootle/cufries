@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import styles from "./FryCard.module.css";
 import Image from 'next/image';
 
+function slightUpper(text) {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
 export default class FryCard extends React.Component {
   
   // PROPS
@@ -21,7 +25,7 @@ export default class FryCard extends React.Component {
     let selectedClass = this.props.selected ? styles.selected : '';
 
     return (
-      <div onClick={() => this.props.onSelection(this.props.fry.id, this.props.selected ? false : true)} className={`${styles.card} ${selectedClass} ${scaleOnHoverClass}`}>
+      <div onClick={() => {if (!this.props.showBadge) {this.props.onSelection(this.props.fry.id, this.props.selected ? false : true)}}} className={`${styles.card} ${selectedClass} ${scaleOnHoverClass}`}>
         <div className={styles.selectCircle}></div>
         <div className={styles.cardThumbnail}>
         <img
@@ -33,8 +37,10 @@ export default class FryCard extends React.Component {
           <h4 className={styles.cardTitle}>{this.props.fry.name}</h4>
           { this.props.showBadge ? 
           <div className={styles.badgeRow}>
-            <div className={styles.badge}>CORE - Lunch</div>
-            <div className={styles.badge}>CORE - Dinner</div>
+            <div className={styles.badge}>{slightUpper(this.props.fry.location)}</div>
+            {this.props.fry.time ?
+            <div className={styles.badge}>{slightUpper(this.props.fry.time || '')}</div>
+            : '' }
           </div>
           : '' }
         </div>
