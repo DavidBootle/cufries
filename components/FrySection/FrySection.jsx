@@ -111,7 +111,7 @@ export default class FrySection extends React.Component {
             {fryRows.map((fryRow, i) => (
               <div key={i} className={styles.FryRow}>
                 {fryRow.map((fry, k) => (
-                  <FryCard key={fry.id} fry={fry} selectable={this.props.selectable} selected={fry.selected || false} onSelection={this.updateSelection}/>
+                  <FryCard key={fry.id} fry={fry} selectable={this.props.selectable} selected={fry.selected || false} onSelection={this.updateSelection} showBadge={!this.props.showSearchBar}/>
                 ))}
               </div>
             ))}
