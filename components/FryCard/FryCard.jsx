@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "./FryCard.module.css";
-import Image from "next/image";
+import Image from 'next/image';
 
 export default class FryCard extends React.Component {
   
@@ -24,7 +24,11 @@ export default class FryCard extends React.Component {
       <div onClick={() => this.props.onSelection(this.props.fry.id, this.props.selected ? false : true)} className={`${styles.card} ${selectedClass} ${scaleOnHoverClass}`}>
         <div className={styles.selectCircle}></div>
         <div className={styles.cardThumbnail}>
-          <img src="https://i.imgur.com/dxOjhM3.jpg" alt="fries" />
+        <Image
+          src={`/images/${String(props.name).replace(/ $/g, "")}.jpg`}
+          alt="image"
+          fill
+        />
         </div>
         <div className={styles.cardDetails}>
           <h4 className={styles.cardTitle}>{this.props.fry.name}</h4>
