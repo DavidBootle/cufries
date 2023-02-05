@@ -24,7 +24,7 @@ export default class FrySection extends React.Component {
       return fry;
     })
 
-    console.log(parsedFries);
+    
 
     this.state = {
       searchText: '',

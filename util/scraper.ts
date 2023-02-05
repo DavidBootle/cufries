@@ -59,10 +59,10 @@ export async function get_day_menu(
     date: Date,
 ): Promise<[DayMenu | null, Error | null]> {
     let items: FoodItemInstance[] = [];
-    console.log(LOCATIONS);
+    
     for (const id_location of Object.keys(LOCATIONS)) {
         let [menu, err] = await get_location_menu(id_location, date);
-        // console.log(menu?.MenuProducts[0])
+        // 
         if (err != null) {
             return [null, err];
         }
@@ -174,7 +174,7 @@ export async function get_all_food(): Promise<[AllFood | null, Error | null]> {
                 return true;
             }
         })
-        console.log(items);
+        
 
         // remove duplicate entries
         let newTmpItems = items.filter((value, index, self) =>

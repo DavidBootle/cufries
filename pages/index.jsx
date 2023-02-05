@@ -18,7 +18,7 @@ export default class Landing extends React.Component {
         // check if preferences are set
         // if not redirect to settings
         let favorites = localStorage.getItem("favorites");
-        console.log(favorites);
+        
         if (!favorites || favorites == '[]') {
             window.location.href = "/settings";
         }

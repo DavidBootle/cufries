@@ -24,10 +24,9 @@ export default class FryCard extends React.Component {
       <div onClick={() => this.props.onSelection(this.props.fry.id, this.props.selected ? false : true)} className={`${styles.card} ${selectedClass} ${scaleOnHoverClass}`}>
         <div className={styles.selectCircle}></div>
         <div className={styles.cardThumbnail}>
-        <Image
-          src={`/images/${String(props.name).replace(/ $/g, "")}.jpg`}
+        <img
+          src={`/images/${String(this.props.fry.name).replace(/ $/g, "")}.jpg`}
           alt="image"
-          fill
         />
         </div>
         <div className={styles.cardDetails}>

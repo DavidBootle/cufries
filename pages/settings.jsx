@@ -17,7 +17,7 @@ export default class Landing extends React.Component {
     // fetch data from menu-day
         axios.get("/api/all-food", { timeout: 30000 })
         .then((response) => {
-            console.log(response);
+            
             if (response.data && response.data.items) {
                 let tmp = response.data.items;
                 tmp.sort((a, b) => {
