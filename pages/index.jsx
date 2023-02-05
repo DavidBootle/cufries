@@ -2,6 +2,7 @@ import LogoHeader from '@/components/LogoHeader/LogoHeader';
 import React, { useState } from 'react';
 import FrySection from '@/components/FrySection/FrySection';
 import axios from 'axios';
+import Head from 'next/head';
 
 export default class Landing extends React.Component {
     constructor(props) {
@@ -30,6 +31,9 @@ export default class Landing extends React.Component {
     render() {
         return (
             <div>
+                <Head>
+                    <title>CU Fries</title>
+                </Head>
                 <LogoHeader />
                 {this.state.loading ?
                 <></> :
