@@ -44,7 +44,9 @@ export default class FrySection extends React.Component {
     // store to local storage
     localStorage.setItem('favorites', JSON.stringify(preferenceNames));
 
-    window.location.href = "/"
+    setTimeout(() => {
+      window.location.href = window.location.origin;
+    }, 200)
   }
 
   async updateSelection(fryId, state) {
