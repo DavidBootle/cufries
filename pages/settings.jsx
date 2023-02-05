@@ -19,6 +19,12 @@ export default class Landing extends React.Component {
         .then((response) => {
             console.log(response);
             if (response.data && response.data.items) {
+                let tmp = response.data.items;
+                tmp.sort((a, b) => {
+                    if (a.name > b.name) return 1;
+                    if (a.name < b.name) return -1;
+                    if (a.name == b.name) return 0;
+                })
                 this.setState({
                     fries: response.data.items,
                     loading: false
