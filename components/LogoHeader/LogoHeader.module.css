@@ -16,6 +16,19 @@
     align-items: center;
 }
 
+.settingsButton {
+    position: absolute;
+    left: calc(100vw - 60px);
+    top: 20px;
+    width: 40px;
+    height: 40px;
+    fill: var(--custom-text-gray);
+}
+
+.settingsButton:hover {
+    fill: var(--clemson-purple);
+}
+
 @media (max-aspect-ratio: 1/1) {
     .header {
         flex-direction: row;
