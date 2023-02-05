@@ -125,7 +125,9 @@ export default class FrySection extends React.Component {
           </>
         ) : (
           <center>
-            <p>No menu items found.</p>
+            {this.props.showSearchBar ?
+            <p>No menu items found.</p> :
+            <p>None of your favorites are available today.</p> }
           </center>
         )}
       </div>
