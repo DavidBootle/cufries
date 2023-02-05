@@ -63,7 +63,7 @@ export default class FrySection extends React.Component {
 
   render() {
     let fries = this.state.fries;
-
+    console.log('Fries:', fries);
 
     let saveButton = (
         <button onClick={this.submitSave} className={styles.saveButton}>Save</button>
