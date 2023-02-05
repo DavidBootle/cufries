@@ -174,14 +174,6 @@ export async function get_all_food(): Promise<[AllFood | null, Error | null]> {
                 return true;
             }
         })
-        
-
-        // remove duplicate entries
-        let newTmpItems = items.filter((value, index, self) =>
-            index === self.findIndex((t: any) => (
-                t.name === value.name && t.time === value.time && t.location == value.location
-            ))
-        )
 
         // const filter_out = (name: string): boolean => {
         //     return items.findIndex((item) => item.name == name) != -1;
@@ -190,6 +182,14 @@ export async function get_all_food(): Promise<[AllFood | null, Error | null]> {
             // if (filter_out(instance.name)) continue;
             output.push(instance);
         }
+
     }
-    return [{items: output}, null];
+
+    // remove duplicate entries
+    let newTmpItems = output.filter((value, index, self) =>
+    index === self.findIndex((t: any) => (
+        t.name === value.name
+    ))
+)
+    return [{items: newTmpItems}, null];
 }
