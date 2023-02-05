@@ -8,7 +8,7 @@ const fssync = require('fs');
 function checkFileExistsSync(filepath){
     let flag = true;
     try{
-      fssync.accessSync(filepath, fs.constants.F_OK);
+      fssync.accessSync(filepath, fssync.constants.F_OK);
     }catch(e){
       flag = false;
       console.log(e);
