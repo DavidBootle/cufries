@@ -10,11 +10,13 @@ export enum Times {
     BREAKFAST = "breakfast",
     LUNCH = "lunch",
     DINNER = "dinner",
+    BRUNCH = "brunch"
 }
 export const TIMES = {
     "891": Times.BREAKFAST,
     "892": Times.LUNCH,
     "893": Times.DINNER,
+    "973": Times.BRUNCH,
 };
 
 export interface ResponseMenu {
