@@ -10,7 +10,6 @@ function checkFileExistsSync(filepath){
       fssync.accessSync(filepath, fs.constants.F_OK);
     }catch(e){
       flag = false;
-      console.log(e);
     }
     return flag;
 }
