@@ -35,7 +35,7 @@ export default class Landing extends React.Component {
                 <Head>
                     <title>CU Fries</title>
                 </Head>
-                <LogoHeader />
+                <LogoHeader showSettingsGear={true}/>
                 {this.state.loading ?
                 <></> :
                 <FrySection fries={this.state.fries}/>

@@ -28,6 +28,23 @@
     width: 50vw;
 }
 
+.saveButton {
+    position: absolute;
+    left: calc(100vw - 100px);
+    top: 20px;
+    border: none;
+    background-color: var(--clemson-orange);
+    color: white;
+    font-size: 25px;
+    padding: 10px;
+    border-radius: 8px;
+    transition: box-shadow 0.2s;
+}
+
+.saveButton:hover {
+    box-shadow: 0 0 10px var(--clemson-purple);
+}
+
 @media (max-aspect-ratio: 1/1) {
     .FryRow {
         flex-direction: column;

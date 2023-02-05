@@ -43,7 +43,7 @@ export default class Landing extends React.Component {
                 <Head>
                     <title>CU Fries</title>
                 </Head>
-                <LogoHeader />
+                <LogoHeader showSettingsGear={false}/>
                 <div className={styles.promptText}>Select Foods to Track:</div>
                 {this.state.loading ?
                 <></> :
