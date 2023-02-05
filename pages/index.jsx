@@ -25,10 +25,19 @@ export default class Landing extends React.Component {
         axios.get("/api/menu-day", { timeout: 30000 })
         .then((response) => {
             if (response.data && response.data.items) {
-                this.setState({
-                    fries: response.data.items,
-                    loading: false
-                })
+
+                if (response.data && response.data.items) {
+                    let tmp = response.data.items;
+                    tmp.sort((a, b) => {
+                        if (a.name > b.name) return 1;
+                        if (a.name < b.name) return -1;
+                        if (a.name == b.name) return 0;
+                    })
+                    this.setState({
+                        fries: response.data.items,
+                        loading: false
+                    })
+                }
             }
         }) 
         .catch((err) => {
