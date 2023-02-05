@@ -3,8 +3,25 @@ import styles from "./FryCard.module.css";
 import Image from "next/image";
 
 const FryCard = (props) => {
+
+  // PROPS:
+  // selectable (true, false)
+
+  let scaleOnHoverClass = !props.selectable ? styles.scaleOnHover : styles.selectable;
+
+  const [selected, setSelected] = useState(false);
+
+  function toggleSelected() {
+    if (props.selectable) {
+      setSelected(selected ? false : true);
+    }
+  }
+
+  let selectedClass = selected ? styles.selected : '';
+
   return (
-    <div className={styles.card}>
+    <div onClick={toggleSelected} className={`${styles.card} ${selectedClass} ${scaleOnHoverClass}`}>
+      <div className={styles.selectCircle}></div>
       <div className={styles.cardThumbnail}>
         <img src="https://i.imgur.com/dxOjhM3.jpg" alt="fries" />
       </div>

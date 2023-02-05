@@ -4,10 +4,16 @@
     border-radius: 10px;
     background-color: var(--custom-bg-gray);
     box-shadow: 5px 5px 8px lightgray;
-    transition: scale 0.2s;
+    transition: scale 0.2s, border 0.2s, ;
+    box-sizing: border-box;
+    border: 0 solid transparent;
 }
 
-.card:hover {
+.card.selectable.selected {
+    border: 2px solid var(--clemson-purple);
+}
+
+.card.scaleOnHover:hover {
     scale: 1.05;
 }
 
