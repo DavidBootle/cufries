@@ -1,8 +1,10 @@
 export enum Location {
     CORE = "core",
+    SCHILLETER = "schilleter"
 }
 export const LOCATIONS = {
     9713: Location.CORE,
+    1891: Location.SCHILLETER,
 };
 export enum Times {
     BREAKFAST = "breakfast",
@@ -47,6 +49,12 @@ export interface FoodItemInstance {
     desc: string;
     time: Times;
     location: Location;
+}
+
+export interface FoodItemListed {
+    name: string;
+    desc: string;
+    info: Array<any>
 }
 
 export interface FoodItem {

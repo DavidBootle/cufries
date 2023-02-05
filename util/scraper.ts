@@ -36,6 +36,7 @@ const BLACKLIST = [
     "Diced Tomatoes",
     "Carrots",
     "Dinner Roll",
+    "Raisins"
 ]
 
 export async function get_location_menu(
@@ -57,18 +58,24 @@ export async function get_location_menu(
 export async function get_day_menu(
     date: Date,
 ): Promise<[DayMenu | null, Error | null]> {
-    const items: FoodItemInstance[] = [];
+    let items: FoodItemInstance[] = [];
+    console.log(LOCATIONS);
     for (const id_location of Object.keys(LOCATIONS)) {
-        const [menu, err] = await get_location_menu(id_location, date);
+        let [menu, err] = await get_location_menu(id_location, date);
+        // console.log(menu?.MenuProducts[0])
         if (err != null) {
             return [null, err];
         }
         if (menu == null) {
             return [null, new Error("No error was given but menu was null")];
         }
-        const has_dup = (name: string): boolean => {
-            return items.findIndex((item) => item.name == name) != -1;
-        };
+
+        // remove complete duplicates
+        menu.MenuProducts = menu.MenuProducts.filter((value, index, self) =>
+            index === self.findIndex((t: any) => (
+                t.Product.MarketingName === value.Product.MarketingName && t.PeriodId === value.PeriodId
+            ))
+        )
         const skip_group = (product: Product): boolean => {
             return (
                 product.Product.Categories.findIndex(
@@ -79,7 +86,8 @@ export async function get_day_menu(
 
         for (const product of menu.MenuProducts) {
             const name = product.Product.MarketingName.replace(/\(.*?\)/, "");
-            if (has_dup(name) || skip_group(product)) {
+            
+            if (skip_group(product) || BLACKLIST.includes(product.Product.MarketingName)) {
                 continue;
             }
 
@@ -98,6 +106,28 @@ export async function get_day_menu(
             items.push(item);
         }
     }
+
+    items = items.map((item, index, array) => {
+        // remove trailing spaces from items
+        item.name = item.name.replace(/ $/g, '');
+
+        // convert fresh-cut french fries to fresh cut french fries
+        if (item.name == "Fresh-Cut French Fries") {
+            item.name = "Fresh Cut French Fries"
+        }
+        return item;
+    });
+
+    // filtering
+    items = items.filter((item, index, array) => {
+        // skip items on the blacklist
+        if (BLACKLIST.includes(item.name)) {
+            return false;
+        } else {
+            return true;
+        }
+    })
+    
     return [{ items }, null];
 }
 
@@ -152,8 +182,6 @@ export async function get_all_food(): Promise<[AllFood | null, Error | null]> {
                 t.name === value.name && t.time === value.time && t.location == value.location
             ))
         )
-        console.log('Items: ', items.length);
-        console.log("New: ", newTmpItems.length);
 
         // const filter_out = (name: string): boolean => {
         //     return items.findIndex((item) => item.name == name) != -1;
