@@ -25,31 +25,13 @@ const fries = [
 ];
 */
 
+
+// PROPS
+// fries - list of all items
 export default class FrySection extends React.Component {
 
-  constructor(props) {
-    super(props);
-
-    this.state = { fries: [] };
-  }
-
-  componentDidMount() {
-    // fetch data from menu-day
-    axios.get("/api/menu-day", { timeout: 30000 })
-    .then((response) => {
-      if (response.data && response.data.items) {
-        this.setState({
-          fries: response.data.items
-        })
-      }
-    }) 
-    .catch((err) => {
-      toast.error(`Failed to fetch with ${err}`);
-    });
-  }
-
   render() {
-    const fries = this.state.fries;
+    const fries = this.props.fries;
     
     let fryRows = [];
 
@@ -66,7 +48,7 @@ export default class FrySection extends React.Component {
             {fryRows.map((fryRow, i) => (
               <div key={i} className={styles.FryRow}>
                 {fryRow.map((fry, j) => (
-                  <FryCard key={j} name={fry.name} />
+                  <FryCard key={j} name={fry.name} selectable={this.props.selectable}/>
                 ))}
               </div>
             ))}
