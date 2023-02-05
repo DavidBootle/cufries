@@ -3,6 +3,7 @@ import { get_day_menu } from "@/util/scraper";
 import { DayMenu } from "@/util/types";
 import internal from "stream";
 const fs = require('fs/promises');
+const fssync = require('fs');
 
 async function getFromSource(date_obj) {
     let [menu, err] = await get_day_menu(date_obj);
@@ -15,7 +16,7 @@ async function getFromSource(date_obj) {
 export default async function handler(req, res) {
     const { date } = "";
     const date_obj = new Date(date);
-    let fileExists = await fs.exists(".day_menu.json");
+    let fileExists = await fssync.exists(".day_menu.json");
     if (!fileExists) {
         let menu = await getFromSource(date_obj);
         res.status(200).json(menu);
