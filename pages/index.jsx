@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import FrySection from '@/components/FrySection/FrySection';
 import axios from 'axios';
 import Head from 'next/head';
+import toast from "react-hot-toast";
 
 export default class Landing extends React.Component {
     constructor(props) {

@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import FryCard from "@/components/FryCard/FryCard";
 import styles from "./FrySection.module.css";
-import toast from "react-hot-toast";
-import axios from "axios";
 
 /*
 const fries = [
