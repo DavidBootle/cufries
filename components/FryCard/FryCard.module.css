@@ -4,6 +4,11 @@
     border-radius: 10px;
     background-color: var(--custom-bg-gray);
     box-shadow: 5px 5px 8px lightgray;
+    transition: scale 0.2s;
+}
+
+.card:hover {
+    scale: 1.1;
 }
 
 .cardThumbnail {
