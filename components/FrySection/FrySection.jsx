@@ -25,62 +25,58 @@ const fries = [
 ];
 */
 
-const FrySection = () => {
-  const [fries, setFries] = useState([]);
+export default class FrySection extends React.Component {
 
-  async function getMenu() {
-    const response = await axios
-      .get("/api/menu-day", { timeout: 30000 })
-      .catch((err) => toast.error(`Failed to fetch with ${err}`));
+  constructor(props) {
+    super(props);
 
-    // console.log(response);
-    // console.log(response.body);
-
-    return response;
+    this.state = { fries: [] };
   }
 
-  useEffect(() => {
-    const query = async () => {
-      await getMenu().then(async (res) => {
-        const data = await JSON.stringify(res.data.items);
+  componentDidMount() {
+    // fetch data from menu-day
+    axios.get("/api/menu-day", { timeout: 30000 })
+    .then((response) => {
+      if (response.data && response.data.items) {
+        this.setState({
+          fries: response.data.items
+        })
+      }
+    }) 
+    .catch((err) => {
+      toast.error(`Failed to fetch with ${err}`);
+    });
+  }
 
-        fries.push(data[2]);
+  render() {
+    const fries = this.state.fries;
+    
+    let fryRows = [];
 
-        console.log(fries);
-
-        return data;
-      });
-    };
-    query();
-  }, []);
-
-  const fryRows = [];
-
-  if (fries && fries.length > 0) {
-    for (let i = 0; i < fries.length; i += 3) {
-      fryRows.push(fries.slice(i, i + 3));
+    if (fries && fries.length > 0) {
+      for (let i = 0; i < fries.length; i += 3) {
+        fryRows.push(fries.slice(i, i + 3));
+      }
     }
+
+    return (
+      <div className={styles.FrySection}>
+        {fries && fries.length > 0 ? (
+          <>
+            {fryRows.map((fryRow, i) => (
+              <div key={i} className={styles.FryRow}>
+                {fryRow.map((fry, j) => (
+                  <FryCard key={j} name={fry.name} />
+                ))}
+              </div>
+            ))}
+          </>
+        ) : (
+          <center>
+            <p>No menu items found.</p>
+          </center>
+        )}
+      </div>
+    );
   }
-
-  return (
-    <div className={styles.FrySection}>
-      {!fries || fries.length > 0 ? (
-        <center>
-          <p>No menu items found.</p>
-        </center>
-      ) : (
-        <>
-          {fryRows.map((fryRow, i) => (
-            <div key={i} className={styles.FryRow}>
-              {fryRow.map((fry, j) => (
-                <FryCard key={j} name={fry.name} />
-              ))}
-            </div>
-          ))}
-        </>
-      )}
-    </div>
-  );
-};
-
-export default FrySection;
+}
