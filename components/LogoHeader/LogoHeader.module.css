@@ -11,4 +11,39 @@
 .header {
     background-color: var(--custom-bg-gray);
     padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.settingsButton {
+    position: absolute;
+    left: calc(100vw - 60px);
+    top: 20px;
+    width: 40px;
+    height: 40px;
+    fill: var(--custom-text-gray);
+}
+
+.settingsButton:hover {
+    fill: var(--clemson-purple);
+}
+
+@media (max-aspect-ratio: 1/1) {
+    .header {
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+        background-color: white;
+    }
+
+    .headerSubtitle {
+        display: none;
+    }
+
+    .headerTitle {
+        font-size: 70px;
+        display: none;
+    }
 }
