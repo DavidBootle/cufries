@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import styles from "./FryCard.module.css";
-import Image from "next/image";
 
 const FryCard = (props) => {
-
   // PROPS:
   // selectable (true, false)
 
-  let scaleOnHoverClass = !props.selectable ? styles.scaleOnHover : styles.selectable;
+  let scaleOnHoverClass = !props.selectable
+    ? styles.scaleOnHover
+    : styles.selectable;
 
   const [selected, setSelected] = useState(false);
 
@@ -17,13 +17,19 @@ const FryCard = (props) => {
     }
   }
 
-  let selectedClass = selected ? styles.selected : '';
+  let selectedClass = selected ? styles.selected : "";
 
   return (
-    <div onClick={toggleSelected} className={`${styles.card} ${selectedClass} ${scaleOnHoverClass}`}>
+    <div
+      onClick={toggleSelected}
+      className={`${styles.card} ${selectedClass} ${scaleOnHoverClass}`}
+    >
       <div className={styles.selectCircle}></div>
       <div className={styles.cardThumbnail}>
-        <img src="https://i.imgur.com/dxOjhM3.jpg" alt="fries" />
+        <img
+          src={`/images/${String(props.name).replace(/ $/g, "")}.jpg`}
+          alt="fries"
+        />
       </div>
       <div className={styles.cardDetails}>
         <h4 className={styles.cardTitle}>{props.name}</h4>
