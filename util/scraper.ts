@@ -10,6 +10,35 @@ import {
     FoodItemInstance,
 } from "./types";
 
+const BLACKLIST = [
+    "Honeydew Melon",
+    "Cantaloupe",
+    "Chopped Fresh Spinach",
+    "Cucumbers",
+    "Croutons",
+    "Diced Ham",
+    "Diced Chicken",
+    "Iceberg Lettuce",
+    "Romaine Lettuce",
+    "Green Leaf Lettuce",
+    "Shredded Carrots",
+    "Sliced Green Bell Peppers",
+    "Sliced Onions",
+    "Sliced Red Onions",
+    "Sliced Tomatoes",
+    "American Cheese",
+    "Cheddar Cheese",
+    "Fresh Garlic",
+    "Grape Tomatoes",
+    "Salami",
+    "Snow Peas",
+    "Broccoli",
+    "Diced Tomatoes",
+    "Carrots",
+    "Dinner Roll",
+    "Raisins"
+]
+
 export async function get_location_menu(
     id_location: string,
     date: Date,
@@ -29,18 +58,24 @@ export async function get_location_menu(
 export async function get_day_menu(
     date: Date,
 ): Promise<[DayMenu | null, Error | null]> {
-    const items: FoodItemInstance[] = [];
+    let items: FoodItemInstance[] = [];
+    console.log(LOCATIONS);
     for (const id_location of Object.keys(LOCATIONS)) {
-        const [menu, err] = await get_location_menu(id_location, date);
+        let [menu, err] = await get_location_menu(id_location, date);
+        // console.log(menu?.MenuProducts[0])
         if (err != null) {
             return [null, err];
         }
         if (menu == null) {
             return [null, new Error("No error was given but menu was null")];
         }
-        const has_dup = (name: string): boolean => {
-            return items.findIndex((item) => item.name == name) != -1;
-        };
+
+        // remove complete duplicates
+        menu.MenuProducts = menu.MenuProducts.filter((value, index, self) =>
+            index === self.findIndex((t: any) => (
+                t.Product.MarketingName === value.Product.MarketingName && t.PeriodId === value.PeriodId
+            ))
+        )
         const skip_group = (product: Product): boolean => {
             return (
                 product.Product.Categories.findIndex(
@@ -51,7 +86,8 @@ export async function get_day_menu(
 
         for (const product of menu.MenuProducts) {
             const name = product.Product.MarketingName.replace(/\(.*?\)/, "");
-            if (has_dup(name) || skip_group(product)) {
+            
+            if (skip_group(product) || BLACKLIST.includes(product.Product.MarketingName)) {
                 continue;
             }
 
@@ -70,6 +106,28 @@ export async function get_day_menu(
             items.push(item);
         }
     }
+
+    items = items.map((item, index, array) => {
+        // remove trailing spaces from items
+        item.name = item.name.replace(/ $/g, '');
+
+        // convert fresh-cut french fries to fresh cut french fries
+        if (item.name == "Fresh-Cut French Fries") {
+            item.name = "Fresh Cut French Fries"
+        }
+        return item;
+    });
+
+    // filtering
+    items = items.filter((item, index, array) => {
+        // skip items on the blacklist
+        if (BLACKLIST.includes(item.name)) {
+            return false;
+        } else {
+            return true;
+        }
+    })
+    
     return [{ items }, null];
 }
 
@@ -82,7 +140,7 @@ function remove_food_instance(item: FoodItemInstance): FoodItem {
 
 export async function get_all_food(): Promise<[AllFood | null, Error | null]> {
     let date = new Date();
-    const items: FoodItem[] = [];
+    const output: FoodItem[] = [];
 
     for (let i = 0; i < 6; i++) {
         date = new Date(date.getTime() + i * (1000 * 60 * 60 * 24));
@@ -94,13 +152,44 @@ export async function get_all_food(): Promise<[AllFood | null, Error | null]> {
         if (instances == null) {
             return [null, new Error("instances is null for some reason")];
         }
-        const has_dup = (name: string): boolean => {
-            return items.findIndex((item) => item.name == name) != -1;
-        };
-        for (const instance of instances.items) {
-            if (has_dup(instance.name)) continue;
-            items.push(remove_food_instance(instance));
+
+        // replacements
+        let items = instances.items.map((item, index, array) => {
+            // remove trailing spaces from items
+            item.name = item.name.replace(/ $/g, '');
+
+            // convert fresh-cut french fries to fresh cut french fries
+            if (item.name == "Fresh-Cut French Fries") {
+                item.name = "Fresh Cut French Fries"
+            }
+            return item;
+        });
+
+        // filtering
+        items = items.filter((item, index, array) => {
+            // skip items on the blacklist
+            if (BLACKLIST.includes(item.name)) {
+                return false;
+            } else {
+                return true;
+            }
+        })
+        console.log(items);
+
+        // remove duplicate entries
+        let newTmpItems = items.filter((value, index, self) =>
+            index === self.findIndex((t: any) => (
+                t.name === value.name && t.time === value.time && t.location == value.location
+            ))
+        )
+
+        // const filter_out = (name: string): boolean => {
+        //     return items.findIndex((item) => item.name == name) != -1;
+        // };
+        for (const instance of items) {
+            // if (filter_out(instance.name)) continue;
+            output.push(instance);
         }
     }
-    return [{ items }, null];
+    return [{items: output}, null];
 }
