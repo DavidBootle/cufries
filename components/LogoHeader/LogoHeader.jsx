@@ -17,7 +17,7 @@ const LogoHeader = (props) => {
             { props.showSettingsGear ? settingsGear : ''}
             <Image alt="CU Fries logo" src="/CUFries.svg" className={styles.logo} width={100} height={100}/>
             <h2 className={styles.headerTitle}>CU Fries</h2>
-            <h5 className={styles.headerSubtitle}>Find your favorite fries in Clemson dining halls.</h5>
+            <h5 className={styles.headerSubtitle}>Find your favorite foods in Clemson dining halls.</h5>
         </div>
     )
 }
