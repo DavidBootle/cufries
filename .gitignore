@@ -38,3 +38,4 @@ next-env.d.ts
 yarn.lock
 .day_menu.json
 .all_food.json
+json/*
