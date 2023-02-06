@@ -94,11 +94,6 @@ export default class FrySection extends React.Component {
     
     let fryRows = [];
 
-    // filter by fries
-    // fries = fries.filter((fry) => {
-    //   return fry.name.includes("Fries");
-    // })
-
     if (fries && fries.length > 0) {
       for (let i = 0; i < fries.length; i += 3) {
         fryRows.push(fries.slice(i, i + 3));
