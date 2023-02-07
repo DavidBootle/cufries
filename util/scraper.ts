@@ -57,7 +57,7 @@ export async function get_location_menu(
 }
 
 export async function get_day_menu(
-    date_string: string,
+    date_string: string | number,
 ): Promise<[DayMenu | null, Error | null]> {
     let items: FoodItemInstance[] = [];
     
@@ -144,9 +144,9 @@ export async function get_all_food(): Promise<[AllFood | null, Error | null]> {
     const output: FoodItem[] = [];
 
     for (let i = 0; i < 6; i++) {
-        date = new Date(date.getTime() + i * (1000 * 60 * 60 * 24));
+        date_stamp = date.getTime() + i * (1000 * 60 * 60 * 24);
 
-        const [instances, err] = await get_day_menu(date);
+        const [instances, err] = await get_day_menu(date_stamp);
         if (err != null) {
             return [null, err];
         }
