@@ -3,7 +3,7 @@ import path from "path";
 const fs = require('fs/promises');
 const fssync = require('fs');
 
-const dir = resolve(argv._[0] || '.');
+const dir = path.resolve(argv._[0] || '.');
 console.log('RESOLVED DIR: ', dir);
 
 // define the paths for the json folder as well as the all_food path
