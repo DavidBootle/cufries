@@ -31,8 +31,8 @@ async function getFromSource(date_obj) {
 }
 
 export default async function handler(req, res) {
-    const date = "";
-    const date_obj = new Date(date);
+    const date_obj = new Date();
+    console.log('DATE: ', date_obj);
 
     // check if file exists
     let fileExists = checkFileExistsSync(filePath);
