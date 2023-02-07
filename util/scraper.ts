@@ -41,7 +41,7 @@ const BLACKLIST = [
 
 export async function get_location_menu(
     id_location: string,
-    date_string: string,
+    date_string: string | number,
 ): Promise<[Menu | null, Error | null]> {
     const date = new Date(date_string);
     const date_formatted = `${
