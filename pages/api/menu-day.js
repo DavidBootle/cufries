@@ -20,9 +20,9 @@ function checkFileExistsSync(filepath){
     return flag;
 }
 
-async function getFromSource(date_obj) {
+async function getFromSource(date_string) {
     // get all food from scraper
-    let [menu, err] = await get_day_menu(date_obj);
+    let [menu, err] = await get_day_menu(date_string);
     // assign the date property consisting of the day of the week
     // this allows us to refresh the menu if the day of the week of the logged data is different
     menu.date = new Date().getDay();
@@ -31,8 +31,7 @@ async function getFromSource(date_obj) {
 }
 
 export default async function handler(req, res) {
-    const date_obj = new Date();
-    console.log('DATE: ', date_obj);
+    const date_string = req.params.date || '';
 
     // check if file exists
     let fileExists = checkFileExistsSync(filePath);
@@ -40,7 +39,7 @@ export default async function handler(req, res) {
     // if the file doesn't exist, create it and get data from campus dish
     if (!fileExists) {
         console.log('[API] json/todays_menu.json does not exist, loading data from CampusDish and generating...')
-        let menu = await getFromSource(date_obj);
+        let menu = await getFromSource(date_string);
         console.log('[API] json/todays_menu.json generated.');
 
         res.status(200).json(menu);

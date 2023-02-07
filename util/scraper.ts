@@ -41,8 +41,9 @@ const BLACKLIST = [
 
 export async function get_location_menu(
     id_location: string,
-    date: Date,
+    date_string: string,
 ): Promise<[Menu | null, Error | null]> {
+    const date = new Date(date_string);
     const date_formatted = `${
         date.getMonth() + 1
     }/${date.getDate()}/${date.getFullYear()}`;
@@ -56,12 +57,12 @@ export async function get_location_menu(
 }
 
 export async function get_day_menu(
-    date: Date,
+    date_string: string,
 ): Promise<[DayMenu | null, Error | null]> {
     let items: FoodItemInstance[] = [];
     
     for (const id_location of Object.keys(LOCATIONS)) {
-        let [menu, err] = await get_location_menu(id_location, date);
+        let [menu, err] = await get_location_menu(id_location, date_string);
         // 
         if (err != null) {
             return [null, err];
