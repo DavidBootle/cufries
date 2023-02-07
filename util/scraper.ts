@@ -59,6 +59,8 @@ export async function get_day_menu(
     date: Date,
 ): Promise<[DayMenu | null, Error | null]> {
     let items: FoodItemInstance[] = [];
+
+    console.log('DATE: ', date);
     
     for (const id_location of Object.keys(LOCATIONS)) {
         let [menu, err] = await get_location_menu(id_location, date);
