@@ -144,7 +144,7 @@ export async function get_all_food(): Promise<[AllFood | null, Error | null]> {
     const output: FoodItem[] = [];
 
     for (let i = 0; i < 6; i++) {
-        date_stamp = date.getTime() + i * (1000 * 60 * 60 * 24);
+        let date_stamp = date.getTime() + i * (1000 * 60 * 60 * 24);
 
         const [instances, err] = await get_day_menu(date_stamp);
         if (err != null) {
