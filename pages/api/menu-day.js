@@ -31,7 +31,7 @@ async function getFromSource(date_string) {
 }
 
 export default async function handler(req, res) {
-    let { date } = req.params;
+    let { date } = req.query;
     const date_string = date || '';
 
     // check if file exists
