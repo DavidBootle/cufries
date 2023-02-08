@@ -18,6 +18,11 @@ export default class FryCard extends React.Component {
     super(props);
   }
 
+  handleImageLoadFail(event) {
+    // if image load failed, then substitute placeholder image
+    event.target.src = '/images/_Placeholder.jpg';
+  }
+
   render() {
 
     let scaleOnHoverClass = !this.props.selectable ? styles.scaleOnHover : styles.selectable;
@@ -30,7 +35,8 @@ export default class FryCard extends React.Component {
         <div className={styles.cardThumbnail}>
         <img
           src={`/images/${String(this.props.fry.name).replace(/ $/g, "")}.jpg`}
-          alt="image"
+          alt={this.props.fry.name}
+          onError={this.handleImageLoadFail}
         />
         </div>
         <div className={styles.cardDetails}>
