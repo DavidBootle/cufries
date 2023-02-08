@@ -10,7 +10,7 @@ export default async function handler(req, res) {
 
     res.setHeader('Content-Type', 'image/jpg');
 
-    fs.access(filePath)
+    await fs.access(filePath)
     .then(async () => {
         // image exists for food item, send image
         let imageBuffer = await fs.readFile(filePath);

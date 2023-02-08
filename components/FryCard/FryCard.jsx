@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useState } from "react";
+import { URL } from "url";
 import styles from "./FryCard.module.css";
-import Image from 'next/image';
 
 function slightUpper(text) {
   return text.charAt(0).toUpperCase() + text.slice(1);
@@ -26,6 +26,8 @@ export default class FryCard extends React.Component {
 
   render() {
 
+    console.log(this.props);
+
     let scaleOnHoverClass = !this.props.selectable ? styles.scaleOnHover : styles.selectable;
 
     let selectedClass = this.props.selected ? styles.selected : '';
@@ -35,7 +37,7 @@ export default class FryCard extends React.Component {
         <div className={styles.selectCircle}></div>
         <div className={styles.cardThumbnail}>
         <img
-          src={`/images/${String(this.props.fry.name).replace(/ $/g, "")}.jpg`}
+          src={encodeURI(`/api/getimage?name=${String(this.props.fry.name).replace(/ $/g, "")}`)}
           alt={this.props.fry.name}
           onError={this.handleImageLoadFail}
         />
