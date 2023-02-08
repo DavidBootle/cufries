@@ -26,8 +26,6 @@ export default class FryCard extends React.Component {
 
   render() {
 
-    console.log(this.props);
-
     let scaleOnHoverClass = !this.props.selectable ? styles.scaleOnHover : styles.selectable;
 
     let selectedClass = this.props.selected ? styles.selected : '';
@@ -37,7 +35,7 @@ export default class FryCard extends React.Component {
         <div className={styles.selectCircle}></div>
         <div className={styles.cardThumbnail}>
         <img
-          src={encodeURI(`/api/getimage?name=${String(this.props.fry.name).replace(/ $/g, "")}`)}
+          src={`/api/getimage?name=${encodeURIComponent(String(this.props.fry.name).replace(/ $/g, ""))}`}
           alt={this.props.fry.name}
           onError={this.handleImageLoadFail}
         />
