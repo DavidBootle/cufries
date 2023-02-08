@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useState } from "react";
 import styles from "./FryCard.module.css";
 import Image from 'next/image';
