@@ -42,12 +42,13 @@ const BLACKLIST = [
 export async function get_location_menu(
     id_location: string,
     date_string: string | number,
+    period_id: string | number,
 ): Promise<[Menu | null, Error | null]> {
     const date = new Date(date_string);
     const date_formatted = `${
         date.getMonth() + 1
     }/${date.getDate()}/${date.getFullYear()}`;
-    const url = `https://clemson.campusdish.com/api/menu/GetMenus?locationId=${id_location}&storeIds=&mode=Daily&date=${date_formatted}&time=&periodId=892&fulfillmentMethod=`;
+    const url = `https://clemson.campusdish.com/api/menu/GetMenus?locationId=${id_location}&storeIds=&mode=Daily&date=${date_formatted}&time=&periodId=${period_id}&fulfillmentMethod=`;
     const response = await fetch(url);
     if (!response.ok) {
         return [null, new Error("Menu request failed")];
@@ -60,51 +61,46 @@ export async function get_day_menu(
     date_string: string | number,
 ): Promise<[DayMenu | null, Error | null]> {
     let items: FoodItemInstance[] = [];
-    
-    for (const id_location of Object.keys(LOCATIONS)) {
-        let [menu, err] = await get_location_menu(id_location, date_string);
-        // 
-        if (err != null) {
-            return [null, err];
-        }
-        if (menu == null) {
-            return [null, new Error("No error was given but menu was null")];
-        }
-
-        // remove complete duplicates
-        menu.MenuProducts = menu.MenuProducts.filter((value, index, self) =>
-            index === self.findIndex((t: any) => (
-                t.Product.MarketingName === value.Product.MarketingName && t.PeriodId === value.PeriodId
-            ))
-        )
-        const skip_group = (product: Product): boolean => {
-            return (
-                product.Product.Categories.findIndex(
-                    (cat) => cat.DisplayName == "Condiments",
-                ) != -1
-            );
-        };
-
-        for (const product of menu.MenuProducts) {
-            const name = product.Product.MarketingName.replace(/\(.*?\)/, "");
-            
-            if (skip_group(product) || BLACKLIST.includes(product.Product.MarketingName)) {
-                continue;
+    for (const period_id of Object.keys(TIMES)) {
+        for (const id_location of Object.keys(LOCATIONS)) {
+            let [menu, err] = await get_location_menu(id_location, date_string, period_id);
+            // 
+            if (err != null) {
+                return [null, err];
+            }
+            if (menu == null) {
+                return [null, new Error("No error was given but menu was null")];
             }
 
-            const desc = product.Product.ShortDescription;
-            // @ts-ignore
-            const time = TIMES[product.PeriodId];
-            // @ts-ignore
-            const location = LOCATIONS[id_location];
-
-            const item: FoodItemInstance = {
-                name,
-                desc,
-                time,
-                location,
+            const skip_group = (product: Product): boolean => {
+                return (
+                    product.Product.Categories.findIndex(
+                        (cat) => cat.DisplayName == "Condiments",
+                    ) != -1
+                );
             };
-            items.push(item);
+
+            for (const product of menu.MenuProducts) {
+                const name = product.Product.MarketingName.replace(/\(.*?\)/, "");
+                
+                if (skip_group(product) || BLACKLIST.includes(product.Product.MarketingName)) {
+                    continue;
+                }
+
+                const desc = product.Product.ShortDescription;
+                // @ts-ignore
+                const time = TIMES[product.PeriodId];
+                // @ts-ignore
+                const location = LOCATIONS[id_location];
+
+                const item: FoodItemInstance = {
+                    name,
+                    desc,
+                    time,
+                    location,
+                };
+                items.push(item);
+            }
         }
     }
 
@@ -128,15 +124,14 @@ export async function get_day_menu(
             return true;
         }
     })
+
+    // remove complete duplicates
+    items = items.filter((value, index, self) =>
+    index === self.findIndex((t: FoodItemInstance) => (
+        t.name == value.name && t.time == value.time && t.location == value.location
+    )))
     
     return [{ items }, null];
-}
-
-function remove_food_instance(item: FoodItemInstance): FoodItem {
-    return {
-        name: item.name,
-        desc: item.desc,
-    };
 }
 
 export async function get_all_food(): Promise<[AllFood | null, Error | null]> {
