@@ -23,6 +23,7 @@
     width: 40px;
     height: 40px;
     fill: var(--custom-text-gray);
+    transition: fill 0.2s;
 }
 
 .settingsButton:hover {
@@ -45,5 +46,11 @@
     .headerTitle {
         font-size: 70px;
         display: none;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .settingsButton:hover {
+        fill: var(--clemson-orange);
     }
 }
