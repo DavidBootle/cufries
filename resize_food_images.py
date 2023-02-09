@@ -40,14 +40,13 @@ for image_path in images:
     if image.width > image.height: # landscape
         margin = (image.width - CROP_SIZE) / 2
         box = (0, 0, CROP_SIZE, CROP_SIZE)
+        image = image.crop(box) # crop to box
     elif image.width < image.height: # portrait
         margin = (image.height - CROP_SIZE) / 2
         box = (0, 0, CROP_SIZE, CROP_SIZE)
+        image = image.crop(box) # crop to box
     else: # already square don't bother
         pass
-
-    print('Box: ', box)
-    image = image.crop(box) # crop to box
 
     image.save(image_path)
     image.close()
