@@ -26,6 +26,7 @@
     border-radius: 5px;
     outline: none;
     width: 50vw;
+    background-color: var(--custom-bg-gray);
 }
 
 .saveButton {
