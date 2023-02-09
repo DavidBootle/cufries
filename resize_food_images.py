@@ -7,7 +7,7 @@ from PIL import Image
 images_folder = Path.cwd() / 'public' / 'images'
 images = images_folder.glob('*.jpg')
 
-CROP_SIZE = 400
+CROP_SIZE = 600
 
 # iterate through each image in the folder
 for image_path in images:
