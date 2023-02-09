@@ -56,3 +56,9 @@
         font-size: 30px;
     }
 }
+
+@media (prefers-color-scheme: dark) {
+    .searchBar {
+        color: white;
+    }
+}
