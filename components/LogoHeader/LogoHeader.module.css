@@ -47,6 +47,12 @@
         font-size: 70px;
         display: none;
     }
+
+    @media (prefers-color-scheme: dark) {
+        .header {
+            background-color: black;
+        }
+    }
 }
 
 @media (prefers-color-scheme: dark) {
