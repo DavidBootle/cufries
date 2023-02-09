@@ -36,7 +36,37 @@ const BLACKLIST = [
     "Diced Tomatoes",
     "Carrots",
     "Dinner Roll",
-    "Raisins"
+    "Raisins",
+    "Bacon Pieces",
+    "Baby Carrots",
+    "Baby Lima Beans",
+    "Baby Spinach",
+    "Black Olives",
+    "Black-Eyed Peas",
+    "Celery Sticks",
+    "Chopped Hard-Cooked Egg",
+    "Cottage Cheese",
+    "Couscous",
+    "Crispy Bacon Bits",
+    "Diced Onions",
+    "Edamame",
+    "Jalapeno Peppers",
+    "Marinara Sauce",
+    "Orange Segments",
+    "Pineapple",
+    "Red Grapes",
+    "Sauteed Mushrooms",
+    "Sauteed Onions",
+    "Sauteed Red & Green Peppers",
+    "Sliced Beets",
+    "Sliced Carrots",
+    "Sliced Mushrooms",
+    "Sliced Scallions",
+    "Southern Collard Greens",
+    "Tangy Kale Slaw",
+    "Tofu",
+    "Tomato Wedges",
+    "Whole Grain Penne"
 ]
 
 export async function get_location_menu(
@@ -112,6 +142,9 @@ export async function get_day_menu(
         if (item.name == "Fresh-Cut French Fries") {
             item.name = "Fresh Cut French Fries"
         }
+        if (item.name == "Pork, Pulled, Carolina") {
+            item.name = "Carolina Pulled Pork"
+        }
         return item;
     });
 
@@ -185,7 +218,6 @@ export async function get_all_food(): Promise<[AllFood | null, Error | null]> {
     let newTmpItems = output.filter((value, index, self) =>
     index === self.findIndex((t: any) => (
         t.name === value.name
-    ))
-)
+    )))
     return [{items: newTmpItems}, null];
 }
