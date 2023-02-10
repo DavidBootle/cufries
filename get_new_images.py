@@ -5,7 +5,9 @@ Reads the all-food.json file and fetches any images that do not yet exist from g
 
 from pathlib import Path
 import json
+from PIL import Image
 from google_images_search import GoogleImagesSearch
+from io import BytesIO
 
 images_folder = Path.cwd() / 'public' / 'images'
 all_food_path = Path.cwd() / 'json' / 'all_food.json'
@@ -42,15 +44,32 @@ for food in food_names:
     print(f"Grabbing image for item '{food}'")
     
     search_params = {
-        'q': f'{food} food',
-        'num': 1,
+        'q': f'{food}',
+        'num': 10,
         'fileType': 'jpg',
         'safe': 'active',
         'imgColorType': 'color'
     }
 
     gis.search(search_params=search_params)
-    image = gis.results()[0] # grab the first image
-    with open(image_path, 'wb') as file:
-        file.write(image.get_raw_data())
-        file.close()
+    images = gis.results() # grab the first image
+    for image_result in images:
+        image_io = BytesIO(image_result.get_raw_data())
+        image = Image.open(image_io)
+        image.show()
+        ok = input('Image ok? (y/N): ')
+        if ok.lower() == 'y': # if image is acceptable, it is added, otherwise go to next image
+            with open(image_path, 'wb') as file:
+                file.write(image_result.get_raw_data())
+                file.close()
+            break
+        elif ok.lower() == 'skip':
+            image.close()
+            break
+        elif ok.lower() == 'exit' or ok.lower() == 'stop':
+            image.close()
+            exit()
+        else:
+            image.close()
+
+    print(f'No more images for {food}')
