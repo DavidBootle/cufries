@@ -11,7 +11,7 @@ from pathlib import Path
 import json
 from nicegui import ui
 from PIL import Image, UnidentifiedImageError
-from google_images_search import GoogleImagesSearch
+from google_images_search import GoogleImagesSearch, GoogleBackendException
 from io import BytesIO
 
 # Define paths
@@ -72,7 +72,6 @@ class State:
 
         # notify user
         ui.notify(f'Loading images for {item_name}...')
-        ui.update()
 
         # if override search term is not empty, set item_name to the override search term
         if customSearchInput.value != '':
@@ -87,7 +86,13 @@ class State:
             'imgColorType': 'color'
         }
 
-        self.gis.search(search_params=search_params) # execute search
+        try:
+            self.gis.search(search_params=search_params) # execute search
+        except GoogleBackendException as e:
+            ui.notify('Failed to get new images.')
+            print(e)
+            return
+        
         images = self.gis.results() # get list of search results
 
         # get list of BytesIO objects from the search results
