@@ -268,4 +268,4 @@ with ui.row():
                 saveCustomImageButton = ui.button('Save Custom Image', on_click=state.save_custom_image).classes('w-32')
             previewColumn.visible = False
 
-ui.run()
+ui.run(title="CU Fries Image Selector", favicon="https://cufries.com/favicon.ico")
