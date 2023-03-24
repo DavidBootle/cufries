@@ -50,6 +50,8 @@ class State:
             all_food = json.loads(file.read()) # load the json
         self.item_names = list(map(lambda i: i['name'], all_food['items'])) # get list of food names
         self.item_names = list(filter(lambda i: not (images_folder / f'{i}.jpg').exists(), self.item_names)) # filter out items that already have images
+        # sort list of item names alphabetically
+        self.item_names.sort()
         self.item_names = {i: self.item_names[i] for i in range(0, len(self.item_names))} # convert to dict with index as key
 
     def load_button(self):
@@ -62,7 +64,6 @@ class State:
         self.update_current_item(itemSelector.value + 1)
         self.set_placeholder_images()
         self.update_images()
-        self.load_button()
 
     def load_images(self):
         '''
@@ -248,10 +249,10 @@ with ui.row():
         ui.label("Click an image to save it").classes('text-lg')
         with ui.row():
             for i in range(0, 5):
-                state.image_elements[i] = ui.image(state.image_content[i]).classes('w-32 h-32').on('click', lambda x, index=i: state.image_selected(index))
+                state.image_elements[i] = ui.image(state.image_content[i]).classes('w-64 h-64').on('click', lambda x, index=i: state.image_selected(index))
         with ui.row():
             for i in range(5, 10):
-                state.image_elements[i] = ui.image(state.image_content[i]).classes('w-32 h-32').on('click', lambda x, index=i: state.image_selected(index))
+                state.image_elements[i] = ui.image(state.image_content[i]).classes('w-64 h-64').on('click', lambda x, index=i: state.image_selected(index))
 
         with ui.row():
             # Row with a load button and skip button
@@ -263,7 +264,7 @@ with ui.row():
             # file upload with border class applied through tailwind classes
             fileUpload = ui.upload(label="Upload Custom Image", on_upload=state.image_uploaded).props('accept="image/*"')
             with ui.column() as previewColumn:
-                customImageUploadPreview = ui.image(placeholder_image).classes('w-32 h-32')
+                customImageUploadPreview = ui.image(placeholder_image).classes('w-64 h-64')
                 saveCustomImageButton = ui.button('Save Custom Image', on_click=state.save_custom_image).classes('w-32')
             previewColumn.visible = False
 
