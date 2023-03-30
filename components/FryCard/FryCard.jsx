@@ -43,12 +43,15 @@ export default class FryCard extends React.Component {
         <div className={styles.cardDetails}>
           <h4 className={styles.cardTitle}>{this.props.fry.name}</h4>
           { this.props.showBadge ? 
-          <div className={styles.badgeRow}>
-            <div className={styles.badge}>{slightUpper(this.props.fry.location)}</div>
-            {this.props.fry.time ?
-            <div className={styles.badge}>{slightUpper(this.props.fry.time || '')}</div>
-            : '' }
-          </div>
+            <div className={styles.badgeColumn}>
+            <div className={styles.badgeRow}>
+              {this.props.fry.locations.map((location, index) => (
+                <div key={index} className={styles.badge}>
+                  {slightUpper(location.location)} - {slightUpper(location.time || '')}
+                </div>
+              ))}
+            </div>
+            </div>
           : '' }
         </div>
       </div>

@@ -158,13 +158,39 @@ export async function get_day_menu(
         }
     })
 
-    // remove complete duplicates
-    items = items.filter((value, index, self) =>
-    index === self.findIndex((t: FoodItemInstance) => (
-        t.name == value.name && t.time == value.time && t.location == value.location
-    )))
+    // Group food items by name and create the required output format
+    const groupedItems: { [key: string]: any } = {};
+    items.forEach((item) => {
+        if (groupedItems[item.name]) {
+            const isDuplicate = groupedItems[item.name].locations.some((loc: any) => {
+                return loc.time === item.time && loc.location === item.location;
+            });
+        
+            if (!isDuplicate) {
+                groupedItems[item.name].locations.push({
+                    time: item.time,
+                    location: item.location,
+                });
+            }
+        }
+        else {
+            groupedItems[item.name] = {
+                name: item.name,
+                desc: item.desc,
+                locations: [
+                    {
+                        time: item.time,
+                        location: item.location,
+                    },
+                ],
+            };
+        }
+    });
+
+    const resultItems = Object.values(groupedItems);
     
-    return [{ items }, null];
+    return [{ items: resultItems }, null];
+
 }
 
 export async function get_all_food(): Promise<[AllFood | null, Error | null]> {

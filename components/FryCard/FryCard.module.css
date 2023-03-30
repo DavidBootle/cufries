@@ -7,6 +7,9 @@
     transition: scale 0.2s, border 0.2s, ;
     box-sizing: border-box;
     border: 0 solid transparent;
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
 }
 
 .card.selectable.selected {
@@ -29,8 +32,13 @@
 
 .cardDetails {
     padding: 10px;
-    margin-bottom: 5px;
+    padding-bottom: 5px;
     background-color: var(--custom-bg-gray);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+    padding-bottom: 20px;
 }
 
 .cardTitle {
@@ -40,14 +48,26 @@
 }
 
 .badge {
-    background-color: var(--clemson-orange);
     display: inline-block;
     color: white;
     padding: 5px 10px;
     border-radius: 99px;
     margin-right: 8px;
-    margin-bottom: 8px;
     font-size: 12px;
+    background-color: var(--clemson-orange);
+}
+
+.badgeRow {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.badgeColumn {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    /* padding-bottom: 8px; */
 }
 
 @media (max-aspect-ratio: 1/1) {
