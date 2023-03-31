@@ -88,7 +88,6 @@ const CUWORMS = [
     'Diced Worms',
     'Garlic Worms',
     'Worm Salad',
-    'Mac and Cheese',
 ]
 
 export async function get_location_menu(
