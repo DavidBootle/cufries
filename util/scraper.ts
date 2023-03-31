@@ -66,7 +66,9 @@ const BLACKLIST = [
     "Tangy Kale Slaw",
     "Tofu",
     "Tomato Wedges",
-    "Whole Grain Penne"
+    "Whole Grain Penne",
+    "Chedder Cheese Cubes",
+    
 ]
 
 export async function get_location_menu(
