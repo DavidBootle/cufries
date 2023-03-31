@@ -116,7 +116,7 @@ export async function get_day_menu(
 
     // Handle CUWorms
     let date = new Date();
-    if (date.getMonth() == 4 && date.getDay() == 1) {
+    if (date.getMonth() == 3 && date.getDay() == 1) {
         let worms: any = [];
         for (const name of CUWORMS) {
             // set the location variable to schilleter or core at random
@@ -244,7 +244,7 @@ export async function get_all_food(): Promise<[AllFood | null, Error | null]> {
     const output: FoodItem[] = [];
 
     // Handle CUWorms
-    if (date.getMonth() == 4 && date.getDate() == 1) {
+    if (date.getMonth() == 3 && date.getDate() == 1) {
         for (const worm of CUWORMS) {
             output.push({
                 name: worm,
