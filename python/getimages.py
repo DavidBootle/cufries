@@ -302,7 +302,7 @@ class State:
         # get the matching item name
         item_name = self.item_names[value]
         # update the text of the titleLabel to the item name
-        titleLabel.text = item_name
+        titleLabel.text = f'{item_name} ({itemSelector.value + 1} of {len(state.item_names)})'
 
 state = State()
 
@@ -325,7 +325,7 @@ with ui.row():
 with ui.row():
     with ui.card():
         # two rows of 5 images each
-        titleLabel = ui.label(state.item_names[0]).classes('text-lg')
+        titleLabel = ui.label(f'{state.item_names[0]} (1 of {len(state.item_names)})').classes('text-lg')
         with ui.row():
             for i in range(0, 5):
                 state.image_elements[i] = ui.image(state.image_content[i]).classes('w-64 h-64').on('click', lambda x, index=i: state.image_selected(index))
