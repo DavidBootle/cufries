@@ -21,10 +21,21 @@ export default class FrySection extends React.Component {
 
     let parsedFries = this.props.fries.map((fry) => {
       fry.selected = favorites.includes(fry.name) ? true : false;
+      fry.available = true;
       return fry;
     })
 
-    
+    // add favorites that are not in the list of fries
+    for (let i = 0; i < favorites.length; i++) {
+      let favorite = favorites[i];
+      if (!parsedFries.map((fry) => { return fry.name }).includes(favorite)) {
+        parsedFries.push({
+          name: favorite,
+          selected: true,
+          available: false
+        })
+      }
+    }
 
     this.state = {
       searchText: '',
@@ -112,9 +123,18 @@ export default class FrySection extends React.Component {
           <>
             {fryRows.map((fryRow, i) => (
               <div key={i} className={styles.FryRow}>
-                {fryRow.map((fry, k) => (
-                  <FryCard key={fry.id} fry={fry} selectable={this.props.selectable} selected={fry.selected || false} onSelection={this.updateSelection} showBadge={!this.props.showSearchBar}/>
-                ))}
+                {fryRow.map((fry, k) => {
+
+                  if (fry.available) {
+                    return (
+                      <FryCard key={fry.id} fry={fry} selectable={this.props.selectable} selected={fry.selected || false} onSelection={this.updateSelection} showBadge={!this.props.showSearchBar}/>
+                    )
+                  } else {
+                    return (
+                      <FryCard key={fry.id} fry={fry} selectable={this.props.selectable} selected={fry.selected ||false} onSelection={this.updateSelection} showBadge={false} unavailable={true}/> 
+                    )
+                  }
+                })}
               </div>
             ))}
           </>

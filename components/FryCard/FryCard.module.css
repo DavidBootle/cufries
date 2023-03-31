@@ -71,6 +71,10 @@
     /* padding-bottom: 8px; */
 }
 
+.unavailableMessage {
+    color: #444;
+}
+
 @media (max-aspect-ratio: 1/1) {
     .card {
         width: 100%;
@@ -111,5 +115,9 @@
 
     .cardThumbnail img {
         filter: brightness(80%);
+    }
+
+    .unavailableMessage {
+        color: #BBB;
     }
 }

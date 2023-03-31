@@ -14,6 +14,7 @@ export default class FryCard extends React.Component {
   // selected - true or false
   // onSelection(fryId, state)
   // showBadge
+  // unavailable - true or false
 
   constructor(props) {
     super(props);
@@ -45,7 +46,7 @@ export default class FryCard extends React.Component {
           { this.props.showBadge ? 
             <div className={styles.badgeColumn}>
             <div className={styles.badgeRow}>
-              {this.props.fry.locations.map((location, index) => (
+              {this.props.fry.locations?.map((location, index) => (
                 <div key={index} className={styles.badge}>
                   {slightUpper(location.location)} - {slightUpper(location.time || '')}
                 </div>
@@ -53,6 +54,10 @@ export default class FryCard extends React.Component {
             </div>
             </div>
           : '' }
+          { this.props.unavailable ?
+            <p className={styles.unavailableMessage}>Unavailable</p>
+            : ''
+          }
         </div>
       </div>
     );
