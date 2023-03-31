@@ -26,26 +26,35 @@ async function getFromSource() {
     // this allows us to refresh the menu if the day of the week of the logged data is different
     menu.date = new Date().getDay();
     // read the file and parse as json
+
+    // skip actually doing menu items on april fools (CUWorms)
+    let date = new Date();
+    if (date.getMonth() == 3 && date.getDate() == 1) {
+        return menu;
+    }
     
     // check if the file exists
+    let data;
     let fileExists = checkFileExistsSync(filePath);
     if (fileExists) {
-        let data = JSON.parse(await fs.readFile(filePath).catch(err => { throw err; }));
+        data = JSON.parse(await fs.readFile(filePath).catch(err => { throw err; }));
         data.date = new Date().getDay();
         // add any new food items to the file
-        for (let i = 0; i < data.items.length; i++) {
-            console.log("4." + i);
+        console.log("Checking for menu items...");
+        for (let i = 0; i < menu.items.length; i++) {
             let food = menu.items[i];
-            if (!menu.items.includes(food)) {
-                menu.items.push(food);
+            if (!data.items.includes(food) && food != null) {
+                console.log(`Adding new menu item ${food.name}`);
+                data.items.push(food);
             }
         }
     } else {
         menu.date = new Date().getDay();
+        data = menu;
     }
 
-    await fs.writeFile(filePath, JSON.stringify(menu)).catch((err) => {throw err;}); // create the file
-    return menu; // return the menu
+    await fs.writeFile(filePath, JSON.stringify(data)).catch((err) => {throw err;}); // create the file
+    return data; // return the menu
 }
 
 export default async function handler(req, res) {
