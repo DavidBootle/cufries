@@ -68,7 +68,27 @@ const BLACKLIST = [
     "Tomato Wedges",
     "Whole Grain Penne",
     "Chedder Cheese Cubes",
-    
+
+]
+
+const CUWORMS = [
+    'Fried Worms',
+    'Grilled Worms',
+    'Charred Worms',
+    'Organic Worms',
+    'California-Style Worms',
+    'Worms in a Blanket',
+    'Worms on a Stick',
+    'Worm Cupcakes',
+    'Worm Rolls',
+    'Baked Worms',
+    'Worm Waffles',
+    'Buffalo Worms',
+    'Chile-Roasted Worms',
+    'Diced Worms',
+    'Garlic Worms',
+    'Worm Salad',
+    'Mac and Cheese',
 ]
 
 export async function get_location_menu(
@@ -93,6 +113,30 @@ export async function get_day_menu(
     date_string: string | number,
 ): Promise<[DayMenu | null, Error | null]> {
     let items: FoodItemInstance[] = [];
+
+    // Handle CUWorms
+    let date = new Date();
+    if (date.getMonth() == 4 && date.getDay() == 1) {
+        let worms: any = [];
+        for (const name of CUWORMS) {
+            // set the location variable to schilleter or core at random
+            let location = Math.random() > 0.5 ? "schilleter" : "core";
+            // set the time variable to 'breakfast', 'lunch', or 'dinner' at random with equal chances
+            let time = Math.random() > 0.66 ? "breakfast" : Math.random() > 0.5 ? "lunch" : "dinner";
+            worms.push({
+                name,
+                desc: "Worms",
+                locations: [
+                    {
+                        "location": location,
+                        "time": time
+                    }
+                ]
+            });
+        }
+        return [{ items: worms }, null];
+    }
+
     for (const period_id of Object.keys(TIMES)) {
         for (const id_location of Object.keys(LOCATIONS)) {
             let [menu, err] = await get_location_menu(id_location, date_string, period_id);
@@ -198,6 +242,17 @@ export async function get_day_menu(
 export async function get_all_food(): Promise<[AllFood | null, Error | null]> {
     let date = new Date();
     const output: FoodItem[] = [];
+
+    // Handle CUWorms
+    if (date.getMonth() == 4 && date.getDate() == 1) {
+        for (const worm of CUWORMS) {
+            output.push({
+                name: worm,
+                desc: "The worms are back!",
+            });
+        }
+        return [{ items: output }, null];
+    }
 
     for (let i = 0; i < 6; i++) {
         let date_stamp = date.getTime() + i * (1000 * 60 * 60 * 24);
