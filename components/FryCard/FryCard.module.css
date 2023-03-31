@@ -38,7 +38,7 @@
     flex-direction: column;
     justify-content: space-between;
     flex-grow: 1;
-    padding-bottom: 20px;
+    padding-bottom: 12px;
 }
 
 .cardTitle {
