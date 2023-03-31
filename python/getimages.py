@@ -208,6 +208,10 @@ class State:
         image.save(images_folder / f'{item_name}.jpg') # save the image to the images folder
         ui.notify(f'Saved image for {item_name}.') # notify user
 
+        # if the loadLocal checkbox is checked, then advance to the next item
+        if loadLocal.value:
+            self.skip_button()
+
     def image_uploaded(self, event):
         # event.content is a tempfile.SpooledTemporaryFile. We need to open it in pillow.
         try:
