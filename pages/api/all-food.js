@@ -25,15 +25,12 @@ async function getFromSource() {
     // assign the date property consisting of the day of the week
     // this allows us to refresh the menu if the day of the week of the logged data is different
     menu.date = new Date().getDay();
-    console.log("1");
     // read the file and parse as json
     
     // check if the file exists
     let fileExists = checkFileExistsSync(filePath);
     if (fileExists) {
-        console.log("2");
         let data = JSON.parse(await fs.readFile(filePath).catch(err => { throw err; }));
-        console.log("3");
         data.date = new Date().getDay();
         // add any new food items to the file
         for (let i = 0; i < data.items.length; i++) {
