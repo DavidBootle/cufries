@@ -32,6 +32,11 @@ async function getFromSource() {
     if (date.getMonth() == 3 && date.getDate() == 1) {
         return menu;
     }
+
+    // remove the locations property from all menu items
+    for (let i = 0; i < menu.items.length; i++) {
+        delete menu.items[i].locations;
+    }
     
     // check if the file exists
     let data;
@@ -43,7 +48,16 @@ async function getFromSource() {
         console.log("Checking for menu items...");
         for (let i = 0; i < menu.items.length; i++) {
             let food = menu.items[i];
-            if (!data.items.includes(food) && food != null) {
+            // loop through each item in data
+            let found = false;
+            for (let j = 0; j < data.items.length; j++) {
+                let dataFood = data.items[j];
+                if (dataFood.name == food.name) {
+                    found = true;
+                }
+            }
+
+            if (!found) {
                 console.log(`Adding new menu item ${food.name}`);
                 data.items.push(food);
             }
