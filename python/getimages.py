@@ -19,6 +19,7 @@ images_folder = Path.cwd() / 'public' / 'images'
 all_food_path = Path.cwd() / 'json' / 'all_food.json'
 api_key_path = Path.cwd() / 'googleimageapikey.txt'
 placeholder_image_path = Path.cwd() / 'public' / 'images' / '_Placeholder.jpg'
+preloaded_images_folder = Path.home() / 'Downloads' / 'CU Fries Image Preload'
 
 placeholder_image = base64.b64encode(placeholder_image_path.read_bytes()).decode('utf-8')
 placeholder_image = f'data:image/jpeg;base64,{placeholder_image}'
@@ -65,10 +66,20 @@ class State:
         self.set_placeholder_images()
         self.update_images()
 
+        # if the loadLocal checkbox is pressed, automatically load new images
+        if loadLocal.value:
+            self.load_button()
+
     def load_images(self):
         '''
         Uses the Google Images API to load images for the current item.
         '''
+
+        # if the loadLocal checkbox is checked, load images from the preloaded_images_folder
+        if loadLocal.value:
+            self.load_local_images()
+            return
+        
         item_name = self.item_names[itemSelector.value] # get name of current item
 
         # notify user
@@ -133,6 +144,26 @@ class State:
                 self.image_content[i] = image
         
         self.update_images()
+
+    def load_local_images(self):
+        '''Loads images from the preloaded_images_folder.'''
+
+        item_name = self.item_names[itemSelector.value] # get the name of the current item
+        # get the folder for the current item
+        item_folder = preloaded_images_folder / item_name
+        # get the list of images in the folder
+        images = list(item_folder.glob('*.jpg'))
+        # loop through each image
+        for i in range(0, len(images)):
+            # open the image
+            with open(images[i], 'rb') as image:
+                # convert image to base64
+                image = base64.b64encode(image.read()).decode('utf-8')
+                image = f'data:image/jpeg;base64,{image}'
+                # save image to self.image_content
+                self.image_content[i] = image
+                # save image to self.image_content_pillow
+                self.image_content_pillow[i] = Image.open(images[i])
 
     def set_placeholder_images(self):
         '''Sets the image content to the placeholder image.'''
@@ -228,6 +259,32 @@ class State:
         # save the image to the images folder
         self.custom_uploaded_image.save(images_folder / f'{item_name}.jpg')
 
+    def load_local_handler(self):
+        '''
+        Called when the loadLocal checkbox is updated.
+        If the checkbox is now checked, then override the itemSelector options to only show items that are in the preloaded image folder.
+        If the image is now unchecked, then set the itemSelector back to it's default behavior.
+        '''
+
+        # get the current state of the loadLocal checkbox
+        checked = loadLocal.value
+
+        # if the checkbox is checked, then override the itemSelector options
+        if checked:
+            folders = [folder.name for folder in preloaded_images_folder.iterdir() if folder.is_dir()] # get the names of the folders in the preloaded images folder
+            folders.sort() # sort the folders alphabetically
+            self.item_names = folders # set the item names to the folders
+            folders = {i: folder for i, folder in enumerate(folders)} # convert to dictionary with index as key and folder name as value
+            itemSelector.options = folders # set the itemSelector options to the folders
+            itemSelector.value = 0 # set the itemSelector value to 0
+            itemSelector.update()
+        
+        # if the checkbox is unchecked
+        else:
+            self.load_starting_item_names() # load the starting item names
+            itemSelector.update()
+
+
 state = State()
 
 ## UI
@@ -241,6 +298,9 @@ with ui.row():
     with ui.card():
         ui.label('Override Search Term (Optional)').classes('text-lg')
         customSearchInput = ui.input(label="Override Search Term")
+
+    with ui.card():
+        loadLocal = ui.checkbox(text='Use Preloaded Images', on_change=state.load_local_handler)
 
 # file upload
 with ui.row():
@@ -256,7 +316,7 @@ with ui.row():
 
         with ui.row():
             # Row with a load button and skip button
-            loadButton = ui.button('Load Images From Google', on_click=state.load_button) # Load Button
+            loadButton = ui.button('Load Images', on_click=state.load_button) # Load Button
             skipButton = ui.button('Next Item', on_click=state.skip_button) # Skip Button
     
     with ui.card():
