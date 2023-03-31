@@ -273,6 +273,13 @@ class State:
         if checked:
             folders = [folder.name for folder in preloaded_images_folder.iterdir() if folder.is_dir()] # get the names of the folders in the preloaded images folder
             folders.sort() # sort the folders alphabetically
+            
+            # get the names of the items that are in the images folder
+            images = [image.name for image in images_folder.iterdir() if image.is_file()]
+            images = [image.split('.')[0] for image in images] # remove the file extension from the image names
+            # remove the items that already have images
+            folders = [folder for folder in folders if folder not in images]
+
             self.item_names = folders # set the item names to the folders
             folders = {i: folder for i, folder in enumerate(folders)} # convert to dictionary with index as key and folder name as value
             itemSelector.options = folders # set the itemSelector options to the folders
@@ -284,6 +291,14 @@ class State:
             self.load_starting_item_names() # load the starting item names
             itemSelector.update()
 
+    def item_selector_handler(self):
+        '''Called when the itemSelector is updated.'''
+        # get the current value of the itemSelector
+        value = itemSelector.value
+        # get the matching item name
+        item_name = self.item_names[value]
+        # update the text of the titleLabel to the item name
+        titleLabel.text = item_name
 
 state = State()
 
@@ -292,7 +307,7 @@ with ui.row():
     # item selection card
     with ui.card():
         ui.label('Current Item: ').classes('text-lg')
-        itemSelector = ui.select(state.item_names, value=0)
+        itemSelector = ui.select(state.item_names, value=0, on_change=state.item_selector_handler)
 
     # override search term card
     with ui.card():
@@ -306,7 +321,7 @@ with ui.row():
 with ui.row():
     with ui.card():
         # two rows of 5 images each
-        ui.label("Click an image to save it").classes('text-lg')
+        titleLabel = ui.label(state.item_names[0]).classes('text-lg')
         with ui.row():
             for i in range(0, 5):
                 state.image_elements[i] = ui.image(state.image_content[i]).classes('w-64 h-64').on('click', lambda x, index=i: state.image_selected(index))
