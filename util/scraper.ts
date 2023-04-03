@@ -115,7 +115,7 @@ export async function get_day_menu(
 
     // Handle CUWorms
     let date = new Date();
-    if (date.getMonth() == 3 && date.getDay() == 1) {
+    if (date.getMonth() == 3 && date.getDate() == 1) {
         let worms: any = [];
         for (const name of CUWORMS) {
             // set the location variable to schilleter or core at random
