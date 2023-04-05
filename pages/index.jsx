@@ -1,6 +1,7 @@
 import LogoHeader from '@/components/LogoHeader/LogoHeader';
 import React, { useState } from 'react';
 import FrySection from '@/components/FrySection/FrySection';
+import LoadingIndicator from '@/components/LoadingIndicator/LoadingIndicator';
 import axios from 'axios';
 import Head from 'next/head';
 import toast from "react-hot-toast";
@@ -22,6 +23,11 @@ export default class Landing extends React.Component {
         if (!favorites || favorites == '[]') {
             window.location.href = "/settings";
         }
+
+        this.attemptLoad();
+    }
+
+    attemptLoad() {
         axios.get("/api/menu-day", { timeout: 30000 })
         .then((response) => {
             if (response.data && response.data.items) {
@@ -41,8 +47,7 @@ export default class Landing extends React.Component {
             }
         }) 
         .catch((err) => {
-            toast.error(`Failed to fetch with ${err}`);
-            this.setState({ loading: false} )
+            this.attemptLoad();
         });
     }
 
@@ -54,7 +59,7 @@ export default class Landing extends React.Component {
                 </Head>
                 <LogoHeader showSettingsGear={true}/>
                 {this.state.loading ?
-                <></> :
+                <LoadingIndicator/> :
                 <FrySection fries={this.state.fries} selectable={false} showSearchBar={false}/>
                 }
             </div>
