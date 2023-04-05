@@ -30,6 +30,20 @@
     fill: var(--clemson-purple);
 }
 
+.discordLink {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    width: 40px;
+    height: 40px;
+    fill: var(--custom-text-gray);
+    transition: fill 0.2s;
+}
+
+.discordLink:hover {
+    fill: #5865F2;
+}
+
 @media (max-aspect-ratio: 1/1) {
     .header {
         flex-direction: row;
