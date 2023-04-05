@@ -44,12 +44,25 @@
     fill: #5865F2;
 }
 
+.githubLink {
+    position: absolute;
+    left: 80px;
+    top: 20px;
+    width: 40px;
+    height: 40px;
+    fill: var(--custom-text-gray);
+    transition: fill 0.2s;
+}
+
+.githubLink:hover {
+    fill: black;
+}
+
 @media (max-aspect-ratio: 1/1) {
     .header {
         flex-direction: row;
         justify-content: center;
         align-items: center;
-        gap: 30px;
         background-color: white;
     }
 
@@ -72,5 +85,9 @@
 @media (prefers-color-scheme: dark) {
     .settingsButton:hover {
         fill: var(--clemson-orange);
+    }
+
+    .githubLink:hover {
+        fill: #555;
     }
 }
