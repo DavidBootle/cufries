@@ -55,7 +55,7 @@ export default class Landing extends React.Component {
                 <LogoHeader showSettingsGear={true}/>
                 {this.state.loading ?
                 <></> :
-                <FrySection fries={this.state.fries}/>
+                <FrySection fries={this.state.fries} selectable={false} showSearchBar={false}/>
                 }
             </div>
         )

@@ -61,11 +61,15 @@ export default class FrySection extends React.Component {
   }
 
   async updateSelection(fryId, state) {
-    let tmpFries = this.state.fries;
-    tmpFries[fryId].selected = state;
-    this.setState({
-      fries: tmpFries
-    })
+
+    // only update state if items are supposed to be selectable
+    if (this.props.selectable) {
+      let tmpFries = this.state.fries;
+      tmpFries[fryId].selected = state;
+      this.setState({
+        fries: tmpFries
+      })
+    }
   }
 
   async updateSearch(e) {
