@@ -16,6 +16,10 @@
     align-items: center;
 }
 
+.header.bottomMargin {
+    padding-bottom: 50px;
+}
+
 .settingsButton {
     position: absolute;
     left: calc(100vw - 60px);
