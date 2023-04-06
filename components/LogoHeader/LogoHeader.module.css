@@ -26,7 +26,7 @@
     transition: fill 0.2s;
 }
 
-.settingsButton:hover {
+.settingsButton:hover, .infoButton:hover {
     fill: var(--clemson-purple);
 }
 
@@ -58,6 +58,17 @@
     fill: black;
 }
 
+.infoButton {
+    position: absolute;
+    left: calc(100vw - 110px);
+    top: 20px;
+    width: 40px;
+    height: 40px;
+    scale: 0.9;
+    fill: var(--custom-text-gray);
+    transition: fill 0.2s;
+}
+
 @media (max-aspect-ratio: 1/1) {
     .header {
         flex-direction: row;
@@ -83,7 +94,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-    .settingsButton:hover {
+    .settingsButton:hover, .infoButton:hover {
         fill: var(--clemson-orange);
     }
 
