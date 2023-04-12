@@ -40,3 +40,6 @@ yarn.lock
 .all_food.json
 json/*
 googleimageapikey.txt
+
+# rust
+rust/target/*
