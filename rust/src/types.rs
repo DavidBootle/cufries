@@ -1,6 +1,6 @@
 use std::fmt::{Display, Formatter, Result, Debug};
 use std::slice::Iter;
-use serde::Serialize;
+use serde::{Serialize, Deserialize};
 
 #[derive(Copy, Clone, PartialEq, Serialize)]
 #[serde(rename_all = "lowercase")]
@@ -137,7 +137,13 @@ pub struct LocationTime {
 }
 
 #[derive(Serialize)]
-pub struct OutFile {
+pub struct TodayOutFile {
     pub items: Vec<FoodItem>,
+    pub date: i32
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct AllOutFile {
+    pub items: Vec<String>,
     pub date: i32
 }

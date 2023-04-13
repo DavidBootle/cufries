@@ -8,13 +8,13 @@
 mod types;
 mod menu;
 
-use menu::{todays_menu};
+use menu::{todays_menu, update_all_foods};
 use chrono::{Local, Datelike};
 use std::fs::File;
 use std::path::Path;
 use std::env::args;
 use std::io::Write;
-use types::OutFile;
+use types::TodayOutFile;
 
 #[tokio::main]
 async fn main() {
@@ -36,9 +36,14 @@ async fn main() {
 
     // get today's menu
     let today_menu = todays_menu(today_date).await;
-    let today_menu_out = OutFile {
+
+    // update all_foods.json
+    update_all_foods(json_folder, &today_menu, today_date);
+
+    // put today menu into OutFile struct
+    let today_menu_out = TodayOutFile {
         date: today_date.day() as i32,
-        items: today_menu,
+        items: today_menu
     };
 
     // save today's menu

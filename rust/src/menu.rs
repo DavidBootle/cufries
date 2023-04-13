@@ -1,6 +1,9 @@
 use chrono::{DateTime, Datelike, Local};
-use crate::types::{Period, Location, MenuItem, FoodCategory, FoodItem, LocationTime};
+use crate::types::{Period, Location, MenuItem, FoodCategory, FoodItem, LocationTime, AllOutFile};
 use crate::types::FoodCategory::*;
+use std::fs::File;
+use std::io::{Read, Write};
+use std::path::Path;
 use std::time::Instant;
 use serde_json::{Value};
 
@@ -230,4 +233,54 @@ pub async fn todays_menu(date: DateTime<Local>) -> Vec<FoodItem> {
     }
 
     condensed_items
+}
+
+pub fn update_all_foods(json_folder: &Path, today_menu: &Vec<FoodItem>, date: DateTime<Local>) {
+    let timer = Instant::now();
+    // get path of all_food.json
+    let all_food_path = json_folder.join("all_food.json");
+
+    // create file object from all_food.json
+    let mut all_food_items: Vec<String>;
+    match File::open(&all_food_path) {
+        Ok(mut file) => {
+            let mut all_food_buffer = String::new();
+            all_food_items = match file.read_to_string(&mut all_food_buffer) {
+                Ok(_) => {
+                    // deserialize all_food.json
+                    let all_food_container: AllOutFile = serde_json::from_str(&all_food_buffer).expect("Failed to deserialize all_food.json");
+                    all_food_container.items
+                    
+                },
+                Err(_) => {
+                    panic!("Failed to read from all_food.json");
+                }
+            };
+        }
+        Err(_) => {
+            println!("all_food.json failed to open, attemping to create new file...");
+            all_food_items = Vec::new();
+        }
+    };
+
+    // loop through every item in the today menu
+    let mut new_items = 0;
+    for food_item in today_menu {
+        if !all_food_items.contains(&food_item.name) {
+            new_items += 1;
+            all_food_items.push(food_item.name.clone());
+        }
+    }
+
+    let all_foods_out = AllOutFile {
+        items: all_food_items,
+        date: date.day() as i32,
+    };
+    // serialize all_foods_out to json
+    let all_foods_out_json = serde_json::to_string(&all_foods_out).expect("Failed to serialize all_foods_out to JSON.");
+    // write to all_food.json
+    let mut all_food_file = File::create(all_food_path).expect("Failed to write to all_foods.json");
+    all_food_file.write_all(all_foods_out_json.as_bytes()).expect("Failed to write to all_food.json.");
+    println!("Added {} new foods to all_food.json in {}ms", new_items, timer.elapsed().as_millis());
+    println!("Wrote all_food.json to file.");
 }
