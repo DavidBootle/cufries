@@ -1,58 +1,29 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { get_day_menu } from "@/util/scraper";
-const fs = require('fs/promises');
-const fssync = require('fs');
-const path = require('path');
+import menuUpdater from '@/util/menu';
+import path from "path";
 
-// define the paths for the json folder as well as the todays_menu path
+// define the paths for the json folder as well as the all_food path
 const jsonFolderPath = path.join(process.cwd(), 'json');
 const filePath = path.join(jsonFolderPath, 'todays_menu.json');
 fssync.mkdirSync(jsonFolderPath,  { recursive: true }); // create the json folder if it doesn't already exist
 
-function checkFileExistsSync(filepath){
-    let flag = true;
-    try{
-      fssync.accessSync(filepath, fssync.constants.F_OK);
-    }catch(e){
-      flag = false;
-      console.log(e);
-    }
-    return flag;
-}
-
-async function getFromSource(date_string) {
-    // get all food from scraper
-    let [menu, err] = await get_day_menu(date_string);
-    // assign the date property consisting of the day of the week
-    // this allows us to refresh the menu if the day of the week of the logged data is different
-    menu.date = new Date().getDay();
-    await fs.writeFile(filePath, JSON.stringify(menu)).catch((err) => {throw err;}); // create the file
-    return menu; // return the menu
-}
-
 export default async function handler(req, res) {
-    let { date } = req.query;
-    const date_string = date || '';
-
     // check if file exists
-    let fileExists = checkFileExistsSync(filePath);
+    let fileExists = menuUpdater.verifyOrCreate();
 
     // if the file doesn't exist, create it and get data from campus dish
     if (!fileExists) {
-        console.log('[API] json/todays_menu.json does not exist, loading data from CampusDish and generating...')
-        let menu = await getFromSource(date_string);
-        console.log('[API] json/todays_menu.json generated.');
 
-        res.status(200).json(menu);
+        if (!menuUpdater.updating) {
+            console.log('[/api/menu-day] Menu files do not exist. Returning 204 while updating.')
+            res.status(204).send();
+        } else {
+            console.log('[/api/menu-day] Request made while menu is not yet ready!');
+            res.status(204).send();
+        }
     }
     
     // if it does exist, read from the file
-    else {
-        let menu = JSON.parse(await fs.readFile(filePath).catch((err) => {throw err;}));
-        // if the logged day of the week is different from the current day of the week, then refetch data
-        if (menu.date != new Date().getDay()) {
-            menu = await getFromSource();
-        }
-        res.status(200).json(menu);
-    }
+    let buffer = await fs.readFile(filePath).catch((err) => {throw err;});
+    let menu = JSON.parse(buffer);
+    res.status(200).json(menu['items']);
 }
