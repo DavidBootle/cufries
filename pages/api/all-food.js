@@ -1,5 +1,7 @@
 import menuUpdater from '@/util/menu';
 import path from "path";
+const fs = require('fs/promises');
+const fssync = require('fs');
 
 // define the paths for the json folder as well as the all_food path
 const jsonFolderPath = path.join(process.cwd(), 'json');
@@ -14,7 +16,7 @@ export default async function handler(req, res) {
     if (!fileExists) {
 
         if (!menuUpdater.updating) {
-            console.log('[/api/all-food] Menu files do not exist. Returning 204 while updating.')
+            console.log('[/api/all-food] Menu files do not exist or are out of date. Returning 204 while updating.')
             res.status(204).send();
         } else {
             console.log('[/api/all-food] Request made while menu is not yet ready!');

@@ -1,5 +1,7 @@
 import menuUpdater from '@/util/menu';
 import path from "path";
+const fs = require('fs/promises');
+const fssync = require('fs');
 
 // define the paths for the json folder as well as the all_food path
 const jsonFolderPath = path.join(process.cwd(), 'json');

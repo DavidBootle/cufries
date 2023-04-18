@@ -7,16 +7,6 @@ const jsonFolderPath = path.join(process.cwd(), 'json');
 const allFoodPath = path.join(jsonFolderPath, 'all_food.json');
 const todayPath = path.join(jsonFolderPath, 'todays_menu.json');
 
-function checkFileExistsSync(filepath){
-    let flag = true;
-    try{
-      fssync.accessSync(filepath, fssync.constants.F_OK);
-    }catch(e){
-      flag = false;
-    }
-    return flag;
-}
-
 class MenuUpdater {
 
     constructor() {
@@ -24,6 +14,11 @@ class MenuUpdater {
     }
 
     update() {
+        if (this.updating) {
+            console.log("[MenuUpdater] Internal call to MenuUpdater.update() while already updating. Ignoring.");
+            return;
+        }
+
         this.updating = true;
         let process = spawn('./rust/target/release/menuparser', ['./json']);
 
@@ -53,7 +48,8 @@ class MenuUpdater {
      */
     async verifyOrCreate() {
         // verify that both files exist
-        let allFoodExists, todayMenuExists = true;
+        let allFoodExists = true;
+        let todayMenuExists = true;
         fs.access(allFoodPath, fs.constants.F_OK).catch(() => {
             allFoodExists = false;
         });
