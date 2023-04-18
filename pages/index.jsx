@@ -10,7 +10,7 @@ export default class Landing extends React.Component {
     constructor(props) {
         super(props);
     
-        this.state = { fries: [], loading: true };
+        this.state = { fries: [], loading: true, generatingMenu: false };
       }
     
     componentDidMount() {
@@ -30,24 +30,30 @@ export default class Landing extends React.Component {
     attemptLoad() {
         axios.get("/api/menu-day", { timeout: 30000 })
         .then((response) => {
-            if (response.data && response.data.items) {
+            if (response.status == 204) {
+                this.setState({
+                    loading: true,
+                    generatingMenu: true
+                });
+                setTimeout(this.attemptLoad, 1000);
+                return;
+            }
 
-                if (response.data && response.data.items) {
-                    let tmp = response.data.items;
-                    tmp.sort((a, b) => {
-                        if (a.name > b.name) return 1;
-                        if (a.name < b.name) return -1;
-                        if (a.name == b.name) return 0;
-                    })
-                    this.setState({
-                        fries: response.data.items,
-                        loading: false
-                    })
-                }
+            if (response.data) {
+                let tmp = response.data;
+                tmp.sort((a, b) => {
+                    if (a.name > b.name) return 1;
+                    if (a.name < b.name) return -1;
+                    if (a.name == b.name) return 0;
+                })
+                this.setState({
+                    fries: tmp,
+                    loading: false
+                })
             }
         }) 
         .catch((err) => {
-            this.attemptLoad();
+            setTimeout(this.attemptLoad, 1000);
         });
     }
 
@@ -59,7 +65,7 @@ export default class Landing extends React.Component {
                 </Head>
                 <LogoHeader showSettingsGear={true}/>
                 {this.state.loading ?
-                <LoadingIndicator/> :
+                <LoadingIndicator generatingMenu={this.state.generatingMenu}/> :
                 <FrySection fries={this.state.fries} selectable={false} showSearchBar={false}/>
                 }
             </div>

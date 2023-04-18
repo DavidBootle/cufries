@@ -4,7 +4,6 @@ import FrySection from '@/components/FrySection/FrySection';
 import LoadingIndicator from '@/components/LoadingIndicator/LoadingIndicator';
 import axios from 'axios';
 import Head from 'next/head';
-import toast from "react-hot-toast";
 import styles from './settings.module.css';
 
 export default class Landing extends React.Component {
@@ -22,22 +21,35 @@ export default class Landing extends React.Component {
     attemptLoad() {
         axios.get("/api/all-food", { timeout: 30000 })
         .then((response) => {
+            if (response.status == 204) {
+                this.setState({
+                    loading: true,
+                    generatingMenu: true
+                });
+                setTimeout(this.attemptLoad, 1000);
+                return;
+            }
             
-            if (response.data && response.data.items) {
-                let tmp = response.data.items;
+            if (response.data) {
+                let tmp = response.data;
                 tmp.sort((a, b) => {
                     if (a.name > b.name) return 1;
                     if (a.name < b.name) return -1;
                     if (a.name == b.name) return 0;
                 })
+                tmp = tmp.map((value, index, array) => {
+                    return {
+                        name: value,
+                    }
+                })
                 this.setState({
-                    fries: response.data.items,
+                    fries: tmp,
                     loading: false
                 })
             }
         }) 
         .catch((err) => {
-            this.attemptLoad();
+            setTimeout(this.attemptLoad, 1000);
         });
     }
 
@@ -50,7 +62,7 @@ export default class Landing extends React.Component {
                 <LogoHeader showSettingsGear={false}/>
                 { !this.state.loading && <div className={styles.promptText}>Select Foods to Track:</div>}
                 {this.state.loading ?
-                <LoadingIndicator/> :
+                <LoadingIndicator generatingMenu={this.state.generatingMenu}/> :
                 <FrySection fries={this.state.fries} selectable={true} showSearchBar={true}/>
                 }
             </div>
