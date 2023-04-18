@@ -1,6 +1,7 @@
 const { spawn } = require('child_process');
 import path from "path";
 const fs = require('fs/promises');
+const fssync = require('fs');
 
 // setup default paths
 const jsonFolderPath = path.join(process.cwd(), 'json');
@@ -50,10 +51,10 @@ class MenuUpdater {
         // verify that both files exist
         let allFoodExists = true;
         let todayMenuExists = true;
-        fs.access(allFoodPath, fs.constants.F_OK).catch(() => {
+        fs.access(allFoodPath, fssync.constants.F_OK).catch(() => {
             allFoodExists = false;
         });
-        fs.access(todayPath, fs.constants.F_OK).catch(() => {
+        fs.access(todayPath, fssync.constants.F_OK).catch(() => {
             todayMenuExists = false;
         });
 
