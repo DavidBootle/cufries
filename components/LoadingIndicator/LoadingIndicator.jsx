@@ -11,7 +11,6 @@ export default class LoadingIndicator extends React.Component {
 
         this.state = {
             showSpinner: false,
-            showText: false,
         }
     }
 
@@ -20,15 +19,11 @@ export default class LoadingIndicator extends React.Component {
         this.spinnerTimeout = setTimeout(() => {
             this.setState({ showSpinner: true })
         }, 1000);
-        this.spinnerTimeout = setTimeout(() => {
-            this.setState({ showText: true })
-        }, 3000);
     }
 
     componentWillUnmount() {
         // if the component is unmounting clear the timeouts
         clearTimeout(this.spinnerTimeout);
-        clearTimeout(this.textTimeout);
     }
 
     render() {
@@ -41,12 +36,10 @@ export default class LoadingIndicator extends React.Component {
 
         let spinner = <div className={styles.ldsRing}><div></div><div></div><div></div><div></div></div>
 
-
-
         return (
             <div className={styles.container}>
                 { this.state.showSpinner && spinner }
-                { this.state.showText && text }
+                { this.props.generatingMenu && text }
             </div>
         )
     }
