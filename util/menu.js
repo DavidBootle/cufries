@@ -21,7 +21,11 @@ class MenuUpdater {
         }
 
         this.updating = true;
-        let process = spawn('./rust/target/release/menuparser', ['./json']);
+
+        // get location of rust executable
+        let rustPath = process.env.MENUPARSER_EXECUTABLE_PATH || './rust/target/release/menuparser';
+
+        let process = spawn(rustPath, ['./json']);
 
         if (!process) {
             console.log(`[ERROR!!!] Failed to spawn menuparser!`);
