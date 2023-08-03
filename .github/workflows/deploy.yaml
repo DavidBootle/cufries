@@ -1,0 +1,15 @@
+name: deploy
+run-name: Deploy to Pi
+on: [push, workflow_dispatch]
+jobs:
+  deploy-to-server:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ssh into remote server
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ssh.bootle.tech
+          username: cufries
+          password: ${{ secrets.CUFRIESPASSWORD }}
+          port: 22
+          script: update
