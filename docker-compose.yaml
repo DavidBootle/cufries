@@ -1,0 +1,12 @@
+version: "3"
+services:
+  cufries:
+    container_name: CUFries
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: davidbootle/cufries
+    ports:
+      - "3004:3004"
+    volumes:
+      - ./json:/usr/src/app/json
