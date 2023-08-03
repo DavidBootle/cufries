@@ -1,4 +1,5 @@
 version: "3"
+name: cufries
 services:
   cufries:
     container_name: CUFries
