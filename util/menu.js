@@ -8,6 +8,8 @@ const jsonFolderPath = path.join(process.cwd(), 'json');
 const allFoodPath = path.join(jsonFolderPath, 'all_food.json');
 const todayPath = path.join(jsonFolderPath, 'todays_menu.json');
 
+const EXECUTABLE_PATH = process.env.MENUPARSER_EXECUTABLE_PATH || './rust/target/release/menuparser';
+
 class MenuUpdater {
 
     constructor() {
@@ -22,10 +24,7 @@ class MenuUpdater {
 
         this.updating = true;
 
-        // get location of rust executable
-        let rustPath = process.env.MENUPARSER_EXECUTABLE_PATH || './rust/target/release/menuparser';
-
-        let process = spawn(rustPath, ['./json']);
+        let process = spawn(EXECUTABLE_PATH, ['./json']);
 
         if (!process) {
             console.log(`[ERROR!!!] Failed to spawn menuparser!`);
@@ -53,17 +52,17 @@ class MenuUpdater {
      */
     async verifyOrCreate() {
         // verify that both files exist
-        let allFoodExists = true;
-        let todayMenuExists = true;
-        fs.access(allFoodPath, fssync.constants.F_OK).catch(() => {
-            allFoodExists = false;
-        });
-        fs.access(todayPath, fssync.constants.F_OK).catch(() => {
-            todayMenuExists = false;
-        });
+        let filesMissing = false;
+
+        try {
+            await fs.access(allFoodPath, fssync.constants.F_OK);
+            await fs.access(todayPath, fssync.constants.F_OK);
+        } catch {
+            filesMissing = true;
+        }
 
         // if either file does not exist, update the menu and return false
-        if (!allFoodExists || !todayMenuExists) {
+        if (filesMissing) {
             console.log("[MenuUpdater] Menu does not exist, generating...");
             this.update();
             return false;

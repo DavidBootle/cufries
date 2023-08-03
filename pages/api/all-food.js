@@ -10,17 +10,18 @@ fssync.mkdirSync(jsonFolderPath,  { recursive: true }); // create the json folde
 
 export default async function handler(req, res) {
     // check if file exists
-    let fileExists = menuUpdater.verifyOrCreate();
+    let fileExists = await menuUpdater.verifyOrCreate();
 
     // if the file doesn't exist, create it and get data from campus dish
     if (!fileExists) {
-
         if (!menuUpdater.updating) {
             console.log('[/api/all-food] Menu files do not exist or are out of date. Returning 204 while updating.')
             res.status(204).send();
+            return;
         } else {
             console.log('[/api/all-food] Request made while menu is not yet ready!');
             res.status(204).send();
+            return;
         }
     }
     

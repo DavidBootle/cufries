@@ -28,7 +28,8 @@ The following are required to run the server:
 2. Run `npm install` in the root directory
 3. Run `npm run build` (for production build)
 4. Build the rust executable by moving into the `rust` directory and running `cargo build --release`. *(Ignore the release if you are debuggging the rust executable. Note that perfomance is greatly increased by using --release.)*
-5. Move back to the root directory and run `npm run start` (for production build) or `npm run dev` (for development build). The server will be hosted on port 3004.
+5. On windows it may be necessary to change the path to the executable because it is an .exe file. This can be done by changing the `MENUPARSER_EXECUTABLE_PATH` environment variable or by creating a .env file with `MENUPARSER_EXECUTABLE_PATH=path` in the root directory.
+6. Move back to the root directory and run `npm run start` (for production build) or `npm run dev` (for development build). The server will be hosted on port 3004.
 
 ### Local Folders
 The following folders will be created and used when the server is run, but are not included with the repository.
