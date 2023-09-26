@@ -96,7 +96,7 @@ class Loader:
         # save images to the new folder
         for i in range(0, len(images)):
             try:
-                images[i].save(item_folder / f'{i}.jpg', 'JPEG')
+                images[i].save(item_folder / f'{i}.webp', 'WEBP')
             except UnidentifiedImageError:
                 # print Failed to load [image name]
                 print('Failed to load image ', item_name)

@@ -140,9 +140,9 @@ class State:
         # convert images to base64 and save to self.image_content
         for k in range(0, len(images)):
             with BytesIO() as buffer:
-                images[k].save(buffer, format='JPEG')
+                images[k].save(buffer, format='WEBP')
                 image = base64.b64encode(buffer.getvalue()).decode('utf-8')
-                image = f'data:image/jpeg;base64,{image}'
+                image = f'data:image/webp;base64,{image}'
                 self.image_content[k] = image
         
         self.update_images()
@@ -161,7 +161,7 @@ class State:
             with open(images[j], 'rb') as image:
                 # convert image to base64
                 image = base64.b64encode(image.read()).decode('utf-8')
-                image = f'data:image/jpeg;base64,{image}'
+                image = f'data:image/webp;base64,{image}'
                 # save image to self.image_content
                 self.image_content[j] = image
                 # save image to self.image_content_pillow
@@ -222,7 +222,7 @@ class State:
         except UnidentifiedImageError:
             ui.notify('Invalid image type.')
 
-        # convert image to JPEG
+        # convert image to WEBP
         image = image.convert('RGB')
 
         # crop out square in the center of image (use full width for portrait images and full height for landscape images)
@@ -247,9 +247,9 @@ class State:
 
         # convert image to base64
         with BytesIO() as buffer:
-            image.save(buffer, format='JPEG')
+            image.save(buffer, format='WEBP')
             image_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
-            image_base64 = f'data:image/jpeg;base64,{image_base64}'
+            image_base64 = f'data:image/webp;base64,{image_base64}'
             customImageUploadPreview.source = image_base64 # set the image source to the base64 image
         
         # make the image preview visible
