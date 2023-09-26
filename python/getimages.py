@@ -18,11 +18,11 @@ from io import BytesIO
 images_folder = Path.cwd() / 'public' / 'images'
 all_food_path = Path.cwd() / 'json' / 'all_food.json'
 api_key_path = Path.cwd() / 'googleimageapikey.txt'
-placeholder_image_path = Path.cwd() / 'public' / 'images' / '_Placeholder.jpg'
+placeholder_image_path = Path.cwd() / 'public' / 'images' / '_Placeholder.webp'
 preloaded_images_folder = Path.home() / 'Downloads' / 'CU Fries Image Preload'
 
 placeholder_image = base64.b64encode(placeholder_image_path.read_bytes()).decode('utf-8')
-placeholder_image = f'data:image/jpeg;base64,{placeholder_image}'
+placeholder_image = f'data:image/webp;base64,{placeholder_image}'
 
 # Define class to keep track of application state
 class State:
@@ -51,7 +51,7 @@ class State:
         with open(all_food_path, 'r', encoding='utf-8') as file:
             all_food = json.loads(file.read()) # load the json
         self.item_names = all_food['items'] # get list of food names
-        self.item_names = list(filter(lambda i: not (images_folder / f'{i}.jpg').exists(), self.item_names)) # filter out items that already have images
+        self.item_names = list(filter(lambda i: not (images_folder / f'{i}.webp').exists(), self.item_names)) # filter out items that already have images
         # sort list of item names alphabetically
         self.item_names.sort()
         self.item_names = {i: self.item_names[i] for i in range(0, len(self.item_names))} # convert to dict with index as key
@@ -112,23 +112,24 @@ class State:
         images = list(map(lambda k: BytesIO(k.get_raw_data()), images))
 
         # get list of PIL images from the BytesIO objects
-        images = list(map(lambda k: Image.open(k), images))
+        for image in images:
+            image = Image.open(image)
 
         # crop out square in the center of image (use full width for portrait images and full height for landscape images)
-        for i in range(0, len(images)):
-            if images[i].width > images[i].height:
+        for j in range(0, len(images)):
+            if images[j].width > images[j].height:
                 # landscape image
-                left = (images[i].width - images[i].height) / 2
+                left = (images[j].width - images[j].height) / 2
                 top = 0
-                right = (images[i].width + images[i].height) / 2
-                bottom = images[i].height
+                right = (images[j].width + images[j].height) / 2
+                bottom = images[j].height
             else:
                 # portrait image
                 left = 0
-                top = (images[i].height - images[i].width) / 2
-                right = images[i].width
-                bottom = (images[i].height + images[i].width) / 2
-            images[i] = images[i].crop((left, top, right, bottom))
+                top = (images[j].height - images[j].width) / 2
+                right = images[j].width
+                bottom = (images[j].height + images[j].width) / 2
+            images[j] = images[j].crop((left, top, right, bottom))
 
         # resize images to 256x256
         images = list(map(lambda i: i.resize((256, 256)), images))
@@ -137,12 +138,12 @@ class State:
         self.image_content_pillow = images
 
         # convert images to base64 and save to self.image_content
-        for i in range(0, len(images)):
+        for k in range(0, len(images)):
             with BytesIO() as buffer:
-                images[i].save(buffer, format='JPEG')
+                images[k].save(buffer, format='JPEG')
                 image = base64.b64encode(buffer.getvalue()).decode('utf-8')
                 image = f'data:image/jpeg;base64,{image}'
-                self.image_content[i] = image
+                self.image_content[k] = image
         
         self.update_images()
 
@@ -155,16 +156,16 @@ class State:
         # get the list of images in the folder
         images = list(item_folder.glob('*.jpg'))
         # loop through each image
-        for i in range(0, len(images)):
+        for j in range(0, len(images)):
             # open the image
-            with open(images[i], 'rb') as image:
+            with open(images[j], 'rb') as image:
                 # convert image to base64
                 image = base64.b64encode(image.read()).decode('utf-8')
                 image = f'data:image/jpeg;base64,{image}'
                 # save image to self.image_content
-                self.image_content[i] = image
+                self.image_content[j] = image
                 # save image to self.image_content_pillow
-                self.image_content_pillow[i] = Image.open(images[i])
+                self.image_content_pillow[j] = Image.open(images[j])
 
     def set_placeholder_images(self):
         '''Sets the image content to the placeholder image.'''
@@ -207,7 +208,7 @@ class State:
 
         item_name = self.item_names[itemSelector.value] # get the name of the current item
         image = self.image_content_pillow[index] # get pillow object for the selected image
-        image.save(images_folder / f'{item_name}.jpg') # save the image to the images folder
+        image.save(images_folder / f'{item_name}.webp', format='webp') # save the image to the images folder
         ui.notify(f'Saved image for {item_name}.') # notify user
 
         # if the loadLocal checkbox is checked, then advance to the next item
