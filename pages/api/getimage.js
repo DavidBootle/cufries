@@ -1,14 +1,14 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-const placeholderPath = path.join(process.cwd(), 'public', 'images', `_Placeholder.jpg`);
+const placeholderPath = path.join(process.cwd(), 'public', 'images', `_Placeholder.webp`);
 
 export default async function handler(req, res) {
     // get name from query
     const { name } = req.query;
-    const filePath = path.join(process.cwd(), 'public', 'images', `${name}.jpg`);
+    const filePath = path.join(process.cwd(), 'public', 'images', `${name}.webp`);
 
-    res.setHeader('Content-Type', 'image/jpg');
+    res.setHeader('Content-Type', 'image/webp');
 
     await fs.access(filePath)
     .then(async () => {
