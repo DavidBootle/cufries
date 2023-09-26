@@ -35,6 +35,7 @@ class State:
         self.image_content = [None] * 10
         self.image_content_pillow = [None] * 10
         self.custom_uploaded_image = None
+        self.gis = None
 
         # Load item names
         self.load_starting_item_names()
@@ -49,7 +50,7 @@ class State:
         # open the all_food.json file
         with open(all_food_path, 'r', encoding='utf-8') as file:
             all_food = json.loads(file.read()) # load the json
-        self.item_names = list(map(lambda i: i['name'], all_food['items'])) # get list of food names
+        self.item_names = all_food['items'] # get list of food names
         self.item_names = list(filter(lambda i: not (images_folder / f'{i}.jpg').exists(), self.item_names)) # filter out items that already have images
         # sort list of item names alphabetically
         self.item_names.sort()
@@ -188,6 +189,7 @@ class State:
         # verify that the api key exists
         if not api_key_path.exists():
             ui.notify('API Key not found.')
+            print("WARNING: NO API KEY FOUND")
             return
         
         # open the api key file
